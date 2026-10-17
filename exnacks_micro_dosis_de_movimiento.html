@@ -1,0 +1,2300 @@
+<!DOCTYPE html>
+<html lang="es" class="dark scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <title>EXNACKS — Micro-Dosis de Movimiento de 60s | Cero Sudor. Cero Miradas.</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        neon: '#CCFF00',
+                        neonDim: 'rgba(204, 255, 0, 0.10)',
+                        stealth: '#00F0FF',
+                        stealthDim: 'rgba(0, 240, 255, 0.10)',
+                        solar: '#FFB800',
+                        solarDim: 'rgba(255, 184, 0, 0.10)',
+                        surface: '#0E1014',
+                        surfaceElevated: '#15181E',
+                        surfaceCard: '#12151B',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        :root {
+            --accent-glow: rgba(204, 255, 0, 0.28);
+            --accent-solid: #CCFF00;
+        }
+
+        body {
+            background-color: #07080A;
+            background-image: 
+                radial-gradient(circle at 50% 0%, rgba(204, 255, 0, 0.06) 0%, transparent 55%),
+                radial-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+            background-size: 100% 100%, 24px 24px;
+            background-position: 0 0, 0 0;
+            color: #F3F4F6;
+            -webkit-tap-highlight-color: transparent;
+            overflow-x: hidden;
+        }
+
+        .glass-panel {
+            background: linear-gradient(180deg, rgba(24, 27, 34, 0.88) 0%, rgba(15, 17, 22, 0.92) 100%);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 20px 50px -15px rgba(0, 0, 0, 0.7), inset 0 1px 0 0 rgba(255, 255, 255, 0.08);
+        }
+
+        .glass-pill {
+            background: rgba(24, 27, 34, 0.75);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .neon-glow {
+            box-shadow: 0 0 32px -4px rgba(204, 255, 0, 0.35), inset 0 1px 0 0 rgba(255, 255, 255, 0.35);
+        }
+
+        .ring-neon-glow {
+            box-shadow: 0 0 45px -8px rgba(204, 255, 0, 0.35), inset 0 0 25px -10px rgba(204, 255, 0, 0.2);
+        }
+
+        .ring-stealth-glow {
+            box-shadow: 0 0 45px -8px rgba(0, 240, 255, 0.32), inset 0 0 25px -10px rgba(0, 240, 255, 0.2);
+        }
+
+        .ring-amber-glow {
+            box-shadow: 0 0 45px -8px rgba(255, 184, 0, 0.32), inset 0 0 25px -10px rgba(255, 184, 0, 0.2);
+        }
+
+        .tabular-nums {
+            font-variant-numeric: tabular-nums;
+        }
+
+        @keyframes float-up {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-5px); }
+        }
+
+        .animate-float {
+            animation: float-up 2.6s infinite ease-in-out;
+        }
+
+        .progress-ring__circle {
+            transition: stroke-dashoffset 0.95s linear, stroke 0.25s ease;
+            transform: rotate(-90deg);
+            transform-origin: 50% 50%;
+        }
+
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        /* Native Dialog Styling & Top-Layer Backdrop */
+        dialog {
+            background: transparent;
+            border: none;
+            padding: 0;
+            margin: auto;
+            color: inherit;
+            max-width: 100vw;
+            max-height: 100dvh;
+            opacity: 0;
+            transform: scale(0.96) translateY(8px);
+            transition: opacity 0.22s ease-out, transform 0.22s ease-out, overlay 0.22s allow-discrete, display 0.22s allow-discrete;
+        }
+
+        dialog[open] {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+        }
+
+        @starting-style {
+            dialog[open] {
+                opacity: 0;
+                transform: scale(0.96) translateY(8px);
+            }
+        }
+
+        dialog::backdrop {
+            background-color: rgba(4, 5, 7, 0.78);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            opacity: 0;
+            transition: opacity 0.22s ease-out, overlay 0.22s allow-discrete, display 0.22s allow-discrete;
+        }
+
+        dialog[open]::backdrop {
+            opacity: 1;
+        }
+
+        @starting-style {
+            dialog[open]::backdrop {
+                opacity: 0;
+            }
+        }
+
+        /* Custom Range Slider */
+        input[type="range"].ex-slider {
+            -webkit-appearance: none;
+            appearance: none;
+            height: 8px;
+            border-radius: 999px;
+            background: #27272A;
+            outline: none;
+        }
+
+        input[type="range"].ex-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: #CCFF00;
+            cursor: pointer;
+            border: 3px solid #090A0C;
+            box-shadow: 0 0 12px rgba(204, 255, 0, 0.6);
+            transition: transform 0.15s ease;
+        }
+
+        input[type="range"].ex-slider::-webkit-slider-thumb:hover {
+            transform: scale(1.12);
+        }
+
+        /* Reduced Motion Support */
+        @media (prefers-reduced-motion: reduce) {
+            .animate-float,
+            .animate-ping,
+            .animate-pulse {
+                animation: none !important;
+            }
+            dialog,
+            dialog::backdrop,
+            .progress-ring__circle {
+                transition-duration: 0.05s !important;
+            }
+        }
+    </style>
+</head>
+<body class="font-sans antialiased selection:bg-neon selection:text-black">
+
+    <!-- Top Navigation Bar -->
+    <header class="fixed top-0 left-0 right-0 z-40 glass-panel border-b border-white/[0.08]">
+        <div class="max-w-5xl mx-auto px-3.5 sm:px-6 h-15 py-2.5 flex items-center justify-between gap-2">
+            <!-- Brand Identity -->
+            <a href="#" class="flex items-center gap-2.5 group focus:outline-none">
+                <div class="w-9 h-9 rounded-xl bg-neon flex items-center justify-center text-black font-black text-base tracking-tighter shadow-[0_0_20px_rgba(204,255,0,0.3)] group-hover:scale-105 transition">
+                    EX
+                </div>
+                <div class="flex flex-col">
+                    <div class="flex items-center gap-1.5">
+                        <span class="font-black tracking-tight text-sm sm:text-base leading-none text-white">EXNACKS</span>
+                        <span class="px-1.5 py-0.5 rounded text-[9px] font-mono font-bold bg-neon/15 text-neon border border-neon/30 leading-none">60s</span>
+                    </div>
+                    <span class="font-mono text-[10px] text-zinc-400 leading-none mt-1" id="nav-subtitle" data-i18n="nav_subtitle">MICRO-DOSIS SIN SUDOR</span>
+                </div>
+            </a>
+
+            <!-- Quick Links (Desktop) -->
+            <nav class="hidden md:flex items-center gap-1 bg-zinc-900/80 p-1 rounded-full border border-white/[0.07] text-xs font-medium">
+                <a href="#hero-deck" class="px-3 py-1 rounded-full text-zinc-200 hover:text-white hover:bg-white/5 transition" data-i18n="nav_deck">Entrenador</a>
+                <a href="#catalog-section" class="px-3 py-1 rounded-full text-zinc-400 hover:text-white hover:bg-white/5 transition" data-i18n="nav_catalog">Catálogo (8)</a>
+                <a href="#sedentary-calc" class="px-3 py-1 rounded-full text-zinc-400 hover:text-white hover:bg-white/5 transition" data-i18n="nav_calc">Calculadora</a>
+                <a href="#science-blog" class="px-3 py-1 rounded-full text-zinc-400 hover:text-white hover:bg-white/5 transition" data-i18n="nav_science">Ciencia</a>
+            </nav>
+
+            <!-- Metabolic Battery Trigger & Controls -->
+            <div class="flex items-center gap-2">
+                <button onclick="openBodyModal()" class="flex items-center gap-2.5 bg-zinc-900/90 hover:bg-zinc-800/90 border border-white/10 hover:border-neon/40 px-3 py-1.5 rounded-full transition group" title="Ver Pasaporte y Batería Corporal 9/9">
+                    <div class="flex items-center gap-1.5 font-mono text-xs font-bold tabular-nums">
+                        <span class="text-neon flex items-center gap-0.5" id="header-streak">🔥 0d</span>
+                        <span class="text-zinc-700">|</span>
+                        <span id="header-score" class="text-white">0/9</span>
+                    </div>
+                    <!-- Mini 3-Zone Segmented Battery -->
+                    <div class="flex items-center gap-1" id="header-mini-bars" aria-hidden="true">
+                        <div class="w-2 h-3.5 rounded-sm bg-zinc-700 transition-all" id="hmb-1"></div>
+                        <div class="w-2 h-3.5 rounded-sm bg-zinc-700 transition-all" id="hmb-2"></div>
+                        <div class="w-2 h-3.5 rounded-sm bg-zinc-700 transition-all" id="hmb-3"></div>
+                    </div>
+                </button>
+
+                <button id="lang-btn" onclick="toggleLanguage()" class="font-mono text-[11px] font-bold px-2.5 py-1.5 rounded-xl bg-zinc-900 hover:bg-zinc-800 text-zinc-300 border border-white/10 transition flex items-center gap-1" title="Cambiar idioma / Switch language">
+                    <span id="lang-es" class="text-neon">ES</span>
+                    <span class="text-zinc-600">/</span>
+                    <span id="lang-en" class="text-zinc-500">EN</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="pt-16">
+        <!-- HERO WORKOUT DECK -->
+        <section id="hero-deck" class="min-h-[calc(100dvh-4rem)] flex flex-col justify-between max-w-2xl mx-auto px-3.5 sm:px-5 py-3 sm:py-5 relative">
+
+            <!-- Top Interactive Bar: 3-Zone Daily Progress + Filters -->
+            <div class="space-y-2.5 mb-2">
+                <!-- Interactive 3-Zone Metabolic Battery Strip -->
+                <div class="grid grid-cols-3 gap-1.5 bg-zinc-900/60 p-1.5 rounded-2xl border border-white/[0.07]">
+                    <button onclick="setCategoryFilter('zone-1')" id="zone-pill-1" class="zone-top-pill flex items-center justify-between px-2.5 py-1.5 rounded-xl bg-zinc-900/90 hover:bg-zinc-800/80 border border-white/5 transition text-left group">
+                        <div class="flex items-center gap-1.5 min-w-0">
+                            <span class="w-2 h-2 rounded-full bg-neon shrink-0"></span>
+                            <span class="text-[11px] font-bold text-zinc-200 truncate" data-i18n="z1_short">Z1: Postura</span>
+                        </div>
+                        <span id="top-z1-count" class="font-mono text-[11px] font-bold text-neon tabular-nums ml-1">0/3</span>
+                    </button>
+
+                    <button onclick="setCategoryFilter('zone-2')" id="zone-pill-2" class="zone-top-pill flex items-center justify-between px-2.5 py-1.5 rounded-xl bg-zinc-900/90 hover:bg-zinc-800/80 border border-white/5 transition text-left group">
+                        <div class="flex items-center gap-1.5 min-w-0">
+                            <span class="w-2 h-2 rounded-full bg-stealth shrink-0"></span>
+                            <span class="text-[11px] font-bold text-zinc-200 truncate" data-i18n="z2_short">Z2: Motor</span>
+                        </div>
+                        <span id="top-z2-count" class="font-mono text-[11px] font-bold text-stealth tabular-nums ml-1">0/3</span>
+                    </button>
+
+                    <button onclick="setCategoryFilter('zone-3')" id="zone-pill-3" class="zone-top-pill flex items-center justify-between px-2.5 py-1.5 rounded-xl bg-zinc-900/90 hover:bg-zinc-800/80 border border-white/5 transition text-left group">
+                        <div class="flex items-center gap-1.5 min-w-0">
+                            <span class="w-2 h-2 rounded-full bg-solar shrink-0"></span>
+                            <span class="text-[11px] font-bold text-zinc-200 truncate" data-i18n="z3_short">Z3: Sóleo</span>
+                        </div>
+                        <span id="top-z3-count" class="font-mono text-[11px] font-bold text-solar tabular-nums ml-1">0/3</span>
+                    </button>
+                </div>
+
+                <!-- Category Filter Pills & Audio Control -->
+                <div class="flex items-center justify-between gap-2">
+                    <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5">
+                        <button onclick="setCategoryFilter('all')" id="filter-all" class="filter-pill whitespace-nowrap px-3 py-1.5 rounded-xl text-xs font-bold transition bg-white text-black shadow-sm">
+                            ⚡ <span data-i18n="filter_all">Todos (8)</span>
+                        </button>
+                        <button onclick="setCategoryFilter('stealth')" id="filter-stealth" class="filter-pill whitespace-nowrap px-3 py-1.5 rounded-xl text-xs font-bold transition bg-zinc-900/90 text-zinc-300 border border-white/10 hover:border-stealth/50">
+                            🕵️‍♂️ <span data-i18n="filter_stealth">Oficina (Sin Pena)</span>
+                        </button>
+                        <button onclick="setCategoryFilter('vilpa')" id="filter-vilpa" class="filter-pill whitespace-nowrap px-3 py-1.5 rounded-xl text-xs font-bold transition bg-zinc-900/90 text-zinc-300 border border-white/10 hover:border-neon/50">
+                            🔥 <span data-i18n="filter_vilpa">VILPA / Potencia</span>
+                        </button>
+                    </div>
+
+                    <div class="flex items-center gap-1.5 shrink-0">
+                        <!-- Sound Metronome Toggle -->
+                        <button id="sound-toggle" onclick="toggleSound()" class="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-zinc-900 border border-white/10 text-neon hover:border-neon/40 transition text-xs font-mono font-bold" title="Activar/Desactivar guía de audio">
+                            <svg id="sound-on-icon" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"></path>
+                            </svg>
+                            <svg id="sound-off-icon" class="w-4 h-4 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15zM17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2"></path>
+                            </svg>
+                            <span id="sound-label" class="hidden sm:inline">AUDIO ON</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Quick Snack Selector Strip (1-Click Navigation across filtered snacks) -->
+                <div class="flex items-center gap-1.5">
+                    <button onclick="navigateSnack(-1)" class="w-8 h-8 rounded-xl bg-zinc-900/90 hover:bg-zinc-800 border border-white/10 flex items-center justify-center text-zinc-300 hover:text-white transition shrink-0" title="Snack anterior (←)">
+                        ‹
+                    </button>
+                    <div id="snack-selector-strip" class="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5 flex-1">
+                        <!-- Populated dynamically -->
+                    </div>
+                    <button onclick="navigateSnack(1)" class="w-8 h-8 rounded-xl bg-zinc-900/90 hover:bg-zinc-800 border border-white/10 flex items-center justify-center text-zinc-300 hover:text-white transition shrink-0" title="Siguiente snack (→)">
+                        ›
+                    </button>
+                </div>
+            </div>
+
+            <!-- MAIN INTERACTIVE EXNACK CARD -->
+            <div id="exnack-card" class="my-auto glass-panel rounded-3xl p-4 sm:p-6 relative overflow-hidden transition-all duration-200 border border-white/10">
+                
+                <!-- Dynamic Ambient Glow -->
+                <div id="card-ambient" style="position: absolute; top: -7rem; right: -7rem;" class="w-64 h-64 rounded-full bg-neon/15 blur-3xl pointer-events-none transition-all duration-500"></div>
+
+                <!-- Card Top Metadata Badges -->
+                <div class="relative z-10 flex items-center justify-between gap-2 mb-2.5">
+                    <div class="flex items-center gap-1.5 flex-wrap">
+                        <span id="zone-badge" class="px-2.5 py-1 rounded-lg text-[10px] font-mono font-bold uppercase tracking-wider bg-neon/15 text-neon border border-neon/30">
+                            🧠 ZONA 1: POSTURA & SNC
+                        </span>
+                        <span id="snack-badge-stealth" class="px-2.5 py-1 rounded-lg text-[10px] font-mono font-semibold bg-zinc-800/90 text-zinc-300 border border-white/5">
+                            🕵️‍♂️ 100% INVISIBLE
+                        </span>
+                        <span id="snack-badge-Sweat" class="px-2.5 py-1 rounded-lg text-[10px] font-mono font-semibold bg-zinc-800/90 text-zinc-300 border border-white/5 hidden sm:inline-block">
+                            💧 CERO SUDOR
+                        </span>
+                    </div>
+                    <span id="snack-id-tag" class="font-mono text-xs font-bold text-zinc-400 bg-black/40 px-2.5 py-1 rounded-lg border border-white/5 shrink-0 tabular-nums">#EX-01</span>
+                </div>
+
+                <!-- Title & Subtitle -->
+                <div class="relative z-10 mb-3">
+                    <h1 id="snack-title" class="text-xl sm:text-2xl font-black tracking-tight text-white leading-tight">
+                        Descompresión Torácica Anti-Laptop
+                    </h1>
+                    <p id="snack-subtitle" class="text-xs sm:text-sm text-zinc-300 font-medium mt-1">
+                        Resetea tu postura cervical y expande tu capacidad pulmonar en 60s
+                    </p>
+                </div>
+
+                <!-- INTERACTIVE HUD / TIMER RING AREA -->
+                <div class="relative z-10 bg-black/55 rounded-2xl border border-white/[0.07] p-3.5 sm:p-4">
+                    <div class="flex flex-col items-center justify-center">
+                        
+                        <!-- Live Phase Cue Banner -->
+                        <div class="mb-3 flex items-center justify-center w-full">
+                            <div id="phase-pill" class="px-4 py-1.5 rounded-full text-xs font-mono font-extrabold uppercase tracking-wider bg-zinc-900/95 text-zinc-300 border border-white/10 transition-all duration-200 flex items-center gap-2 shadow-inner">
+                                <span id="phase-dot" class="w-2 h-2 rounded-full bg-neon animate-pulse"></span>
+                                <span id="phase-text">LISTO • AUDIO + GUÍA VISUAL</span>
+                            </div>
+                        </div>
+
+                        <!-- Dual Concentric Telemetry Ring -->
+                        <div id="ring-container" class="relative w-44 h-44 sm:w-52 sm:h-52 flex items-center justify-center rounded-full transition-all duration-300">
+                            <svg class="w-full h-full" viewBox="0 0 140 140">
+                                <!-- Subtle Dial Tick Ring -->
+                                <circle class="text-zinc-800/50" stroke-width="1.5" stroke-dasharray="2 7.5" stroke="currentColor" fill="transparent" r="65" cx="70" cy="70"/>
+                                <!-- Outer Track (60s) -->
+                                <circle class="text-zinc-800/90" stroke-width="6" stroke="currentColor" fill="transparent" r="57" cx="70" cy="70"/>
+                                <!-- Inner Track (Phase) -->
+                                <circle class="text-zinc-900" stroke-width="4" stroke="currentColor" fill="transparent" r="47" cx="70" cy="70"/>
+                                
+                                <!-- Inner Phase Progress Ring (r=47 -> circumference = 295.31) -->
+                                <circle id="phase-ring" class="progress-ring__circle text-stealth opacity-90" stroke-width="4" stroke-dasharray="295.31" stroke-dashoffset="295.31" stroke-linecap="round" stroke="currentColor" fill="transparent" r="47" cx="70" cy="70"/>
+                                
+                                <!-- Outer 60s Progress Ring (r=57 -> circumference = 358.14) -->
+                                <circle id="timer-ring" class="progress-ring__circle text-neon" stroke-width="6" stroke-dasharray="358.14" stroke-dashoffset="0" stroke-linecap="round" stroke="currentColor" fill="transparent" r="57" cx="70" cy="70"/>
+                            </svg>
+
+                            <!-- Center HUD Readout -->
+                            <div class="inset-0 flex flex-col items-center justify-center text-center pointer-events-none px-4" style="position: absolute;">
+                                <div id="visual-diagram" class="w-11 h-11 sm:w-13 sm:h-13 flex items-center justify-center text-neon transition-transform duration-500 ease-out">
+                                </div>
+                                <div id="timer-display" class="font-mono text-3xl sm:text-4xl font-black tracking-tighter text-white leading-none mt-1 tabular-nums">
+                                    01:00
+                                </div>
+                                <div id="phase-subtimer" class="font-mono text-[10px] font-bold text-zinc-400 uppercase tracking-widest mt-1 h-3.5 tabular-nums">
+                                    CADENCIA GUIADA
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Interactive Phase Cadence Timeline Strip -->
+                        <div id="phase-timeline" class="w-full max-w-md grid gap-1.5 mt-3.5">
+                            <!-- Dynamically populated with the snack's phases (e.g. 4s Inhala | 2s Sostén | 4s Exhala) -->
+                        </div>
+
+                        <!-- 3-Column Telemetry Bar -->
+                        <div class="grid grid-cols-3 gap-2 w-full mt-3 pt-3 border-t border-white/[0.08] text-center">
+                            <div class="bg-zinc-900/80 rounded-xl py-2 px-2.5 border border-white/5">
+                                <div class="text-[9px] font-mono text-zinc-400 uppercase tracking-wider" data-i18n="cadence_label">CADENCIA</div>
+                                <div id="snack-cadence" class="font-mono text-xs font-bold text-white truncate mt-0.5 tabular-nums">4s / 2s / 4s</div>
+                            </div>
+                            <div id="reps-box" class="bg-zinc-900/80 rounded-xl py-2 px-2.5 border border-white/5 transition-colors duration-200">
+                                <div id="reps-label" class="text-[9px] font-mono text-zinc-400 uppercase tracking-wider" data-i18n="reps_est">META (60s)</div>
+                                <div id="live-reps" class="font-mono text-xs font-bold text-neon truncate mt-0.5 tabular-nums">6 CICLOS</div>
+                            </div>
+                            <div class="bg-zinc-900/80 rounded-xl py-2 px-2.5 border border-white/5">
+                                <div class="text-[9px] font-mono text-zinc-400 uppercase tracking-wider" data-i18n="roi_label">IMPACTO BIO</div>
+                                <div id="snack-roi-short" class="font-mono text-xs font-bold text-stealth truncate mt-0.5">+HRV / -Cortisol</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Instructions & Biomechanical Science -->
+                <div class="relative z-10 space-y-2 mt-3">
+                    <div class="bg-zinc-900/75 rounded-2xl p-3 border border-white/[0.07]">
+                        <div class="text-[10px] font-mono uppercase tracking-wider text-zinc-400 mb-1 flex items-center justify-between gap-2">
+                            <span class="font-bold text-zinc-300" data-i18n="how_to_label">⚡ PROTOCOLO DE EJECUCIÓN</span>
+                            <span id="snack-location" class="text-stealth font-semibold truncate">📍 Sentado en tu silla</span>
+                        </div>
+                        <p id="snack-instructions" class="text-xs sm:text-[13px] text-zinc-200 leading-relaxed">
+                            Sigue el guía visual y auditivo: 4 segundos inhalando y abriendo el pecho, 2 segundos apretando escápulas atrás en retención, y 4 segundos exhalando lento.
+                        </p>
+                    </div>
+
+                    <div class="flex items-start gap-2.5 bg-neonDim rounded-2xl p-3 border border-neon/20">
+                        <span class="text-base leading-none mt-0.5 shrink-0">🔬</span>
+                        <p id="snack-science" class="text-xs text-zinc-200 leading-relaxed">
+                            <strong class="text-neon">Evidencia:</strong> Cada centímetro que tu cabeza se adelanta suma 4.5 kg de carga cervical.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Action Control Deck (Start/Pause, Reset, Lucky) -->
+                <div class="relative z-10 flex items-center gap-2 mt-3.5">
+                    <button id="start-btn" onclick="toggleTimer()" class="flex-1 py-3.5 px-4 rounded-2xl bg-neon hover:bg-[#d8ff33] active:scale-[0.99] text-black font-black text-xs sm:text-sm tracking-tight flex items-center justify-center gap-2 transition neon-glow">
+                        <span id="start-btn-icon" class="text-sm">▶</span>
+                        <span id="start-btn-text" data-i18n="btn_start">INICIAR EXNACK (60s)</span>
+                    </button>
+
+                    <button id="reset-btn" onclick="stopTimer()" class="hidden py-3.5 px-3.5 rounded-2xl bg-zinc-800 hover:bg-zinc-700 active:scale-[0.97] text-zinc-200 font-mono font-bold text-xs border border-white/15 items-center justify-center transition" title="Reiniciar 60s">
+                        ↺
+                    </button>
+
+                    <button id="lucky-btn" onclick="triggerLuckySnack()" class="py-3.5 px-4 rounded-2xl bg-zinc-900 hover:bg-zinc-800 active:scale-[0.98] text-white font-bold text-xs sm:text-sm border border-white/15 flex items-center justify-center gap-1.5 transition shrink-0" title="Elige inteligentemente una zona que te falte hoy (Tecla R)">
+                        <span id="dice-icon" class="text-base transition-transform duration-300">🎲</span>
+                        <span data-i18n="btn_lucky">Al azar</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Keyboard Shortcuts & Scroll Hint -->
+            <div class="pt-2.5 flex items-center justify-between text-[11px] text-zinc-400">
+                <a href="#catalog-section" class="flex items-center gap-1.5 hover:text-neon transition font-medium">
+                    <span>↓</span>
+                    <span data-i18n="scroll_science">Ver catálogo completo y calculadora</span>
+                </a>
+                <div class="hidden sm:flex items-center gap-2 font-mono text-[10px] text-zinc-500">
+                    <span><kbd class="px-1.5 py-0.5 rounded bg-zinc-900 border border-white/10 text-zinc-300">Espacio</kbd> <span data-i18n="kbd_play">Iniciar/Pausa</span></span>
+                    <span><kbd class="px-1.5 py-0.5 rounded bg-zinc-900 border border-white/10 text-zinc-300">←/→</kbd> <span data-i18n="kbd_nav">Cambiar</span></span>
+                    <span><kbd class="px-1.5 py-0.5 rounded bg-zinc-900 border border-white/10 text-zinc-300">R</kbd> <span data-i18n="kbd_random">Azar</span></span>
+                </div>
+            </div>
+        </section>
+
+        <!-- FULL INTERACTIVE CATALOG SECTION (All 8 Exnacks at a glance) -->
+        <section id="catalog-section" class="py-14 px-4 border-t border-white/[0.08] max-w-5xl mx-auto">
+            <div class="flex flex-col sm:flex-row sm:items-end justify-between mb-8 gap-4">
+                <div>
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-zinc-300 font-mono text-xs mb-2.5">
+                        <span>⚡</span>
+                        <span data-i18n="catalog_badge">ARSENAL BIOMECÁNICO • 8 MICRO-DOSIS</span>
+                    </div>
+                    <h2 class="text-2xl sm:text-3xl font-black tracking-tight text-white" data-i18n="catalog_heading">
+                        Explora por Zona Anatómica
+                    </h2>
+                </div>
+                <p class="text-xs sm:text-sm text-zinc-400 max-w-sm" data-i18n="catalog_subheading">
+                    Selecciona cualquier ejercicio para cargarlo en el temporizador interactivo. Combina 3 de cada zona para completar tu batería 9/9.
+                </p>
+            </div>
+
+            <div id="catalog-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
+                <!-- Populated dynamically from EXNACKS_DB -->
+            </div>
+        </section>
+
+        <!-- DYNAMIC SEDENTARY OXIDATION CALCULATOR -->
+        <section id="sedentary-calc" class="py-14 px-4 border-t border-white/[0.08] bg-surface/70">
+            <div class="max-w-5xl mx-auto">
+                <div class="glass-panel rounded-3xl p-6 sm:p-8 border border-white/10">
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+                        <div class="lg:col-span-6 space-y-3">
+                            <span class="font-mono text-xs uppercase tracking-widest text-neon font-bold" data-i18n="calc_tag">CALCULADORA DE DESACTIVACIÓN SEDENTARIA</span>
+                            <h2 class="text-2xl sm:text-3xl font-black text-white tracking-tight leading-tight" data-i18n="calc_title">
+                                ¿Cuántas horas pasas sentado al día?
+                            </h2>
+                            <p class="text-sm text-zinc-300 leading-relaxed" data-i18n="calc_desc">
+                                Después de 90 minutos continuos sin contracción muscular, la enzima <strong>lipoproteína lipasa (LPL)</strong> cae hasta un 90% y tu sensibilidad a la insulina se desploma. Una hora de gimnasio en la noche no revierte 9 horas de inmovilidad celular.
+                            </p>
+
+                            <!-- Visual Sedentary Load Meter -->
+                            <div class="pt-3 space-y-2">
+                                <div class="flex justify-between text-xs font-mono">
+                                    <span class="text-zinc-400" data-i18n="calc_load_label">CARGA DE INACTIVIDAD ENZIMÁTICA:</span>
+                                    <span id="calc-load-status" class="font-bold text-amber-400">ALTA (5 apagones/día)</span>
+                                </div>
+                                <div class="w-full h-2.5 bg-zinc-900 rounded-full overflow-hidden border border-white/10 p-0.5">
+                                    <div id="calc-risk-bar" class="h-full rounded-full bg-gradient-to-r from-neon via-amber-400 to-red-500 transition-all duration-300" style="width: 65%"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="lg:col-span-6 bg-black/60 p-5 sm:p-6 rounded-2xl border border-white/10 space-y-4">
+                            <div class="flex justify-between items-baseline">
+                                <label for="sitting-slider" class="text-xs font-mono text-zinc-400 uppercase" data-i18n="hours_sitting">HORAS SENTADO HOY:</label>
+                                <span id="hours-val" class="font-mono text-2xl sm:text-3xl font-black text-neon tabular-nums">8 hrs</span>
+                            </div>
+
+                            <input id="sitting-slider" type="range" min="2" max="14" value="8" oninput="updateCalculator(this.value)" class="ex-slider w-full">
+                            <div class="flex justify-between text-[10px] font-mono text-zinc-500">
+                                <span>2h</span>
+                                <span>6h</span>
+                                <span>10h</span>
+                                <span>14h</span>
+                            </div>
+                            
+                            <div class="space-y-2.5 pt-3 border-t border-white/10 text-xs sm:text-sm">
+                                <div class="flex justify-between items-center">
+                                    <span class="text-zinc-400" data-i18n="calc_prescription">Dosis mínima efectiva:</span>
+                                    <span id="calc-snacks" class="font-mono font-bold text-white tabular-nums">8 snacks × 60s</span>
+                                </div>
+                                <div class="flex justify-between items-center">
+                                    <span class="text-zinc-400" data-i18n="calc_frequency">Frecuencia ideal:</span>
+                                    <span id="calc-freq" class="font-mono font-bold text-amber-400 tabular-nums">1 cada 60 min</span>
+                                </div>
+                                <div class="flex justify-between items-center">
+                                    <span class="text-zinc-400" data-i18n="calc_time">Tiempo total invertido:</span>
+                                    <span id="calc-minutes" class="font-mono font-bold text-neon tabular-nums">8 minutos / día</span>
+                                </div>
+                                <div class="flex justify-between items-center">
+                                    <span class="text-zinc-400" data-i18n="calc_risk">Reducción riesgo CV (VILPA):</span>
+                                    <span id="calc-vilpa" class="font-mono font-bold text-stealth tabular-nums">-38% a -40%</span>
+                                </div>
+                            </div>
+
+                            <button onclick="startRecommendedProtocol()" class="w-full py-3 rounded-xl bg-white/10 hover:bg-neon hover:text-black text-white font-bold text-xs uppercase tracking-wider font-mono transition border border-white/10">
+                                <span data-i18n="calc_cta">⚡ Iniciar 1er Exnack Recomendado Ahora</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- APPLIED SCIENCE BLOG SECTION -->
+        <section id="science-blog" class="py-16 px-4 max-w-5xl mx-auto">
+            <div class="flex flex-col sm:flex-row sm:items-end justify-between mb-10 gap-4">
+                <div>
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-neon/10 border border-neon/30 text-neon font-mono text-xs mb-3">
+                        <span>🔬</span>
+                        <span data-i18n="blog_badge">CIENCIA APLICADA • CERO HUMO</span>
+                    </div>
+                    <h2 class="text-3xl sm:text-4xl font-black tracking-tight text-white" data-i18n="blog_heading">
+                        Por qué 60 segundos cambian tu fisiología
+                    </h2>
+                </div>
+                <p class="text-sm text-zinc-400 max-w-sm" data-i18n="blog_subheading">
+                    Artículos de 2 minutos respaldados por fisiología del ejercicio, telemetría y longevidad.
+                </p>
+            </div>
+
+            <div id="blog-grid" class="grid grid-cols-1 md:grid-cols-3 gap-5">
+            </div>
+        </section>
+
+        <!-- NATIVE APP & SLACK WAITLIST -->
+        <section class="py-16 px-4 border-t border-white/[0.08] bg-gradient-to-b from-surface to-black">
+            <div class="max-w-3xl mx-auto text-center space-y-6">
+                <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-stealth/10 border border-stealth/30 text-stealth font-mono text-xs">
+                    <span>⌚</span>
+                    <span data-i18n="waitlist_badge">PRÓXIMAMENTE EN iOS, APPLE WATCH & SLACK</span>
+                </div>
+                <h2 class="text-3xl sm:text-5xl font-black tracking-tight text-white leading-tight" data-i18n="waitlist_title">
+                    Deja que el acelerómetro cuente tus repeticiones.
+                </h2>
+                <p class="text-zinc-400 text-sm sm:text-base max-w-xl mx-auto" data-i18n="waitlist_desc">
+                    Estamos construyendo la app nativa de Exnacks con widget de "Batería Metabólica" en tu pantalla de bloqueo y detección automática en escaleras y sóleo bajo el escritorio.
+                </p>
+
+                <form id="waitlist-form" onsubmit="handleWaitlistSubmit(event)" class="max-w-md mx-auto space-y-3 pt-2">
+                    <div class="flex flex-col sm:flex-row gap-2">
+                        <input type="email" id="waitlist-email" required placeholder="tu@correo.com" class="flex-1 px-4 py-3.5 rounded-xl bg-zinc-900 border border-white/15 text-white placeholder-zinc-500 text-sm focus:outline-none focus:border-neon">
+                        <button type="submit" class="px-6 py-3.5 rounded-xl bg-neon hover:bg-[#d8ff33] text-black font-black text-sm tracking-tight transition whitespace-nowrap">
+                            <span data-i18n="waitlist_btn">Unirme al Beta</span>
+                        </button>
+                    </div>
+                    <div class="flex items-center justify-center gap-4 text-xs text-zinc-400 pt-1">
+                        <label class="flex items-center gap-1.5 cursor-pointer">
+                            <input type="radio" name="profile" value="personal" checked class="accent-[#CCFF00]">
+                            <span data-i18n="profile_personal">Uso Personal (Watch/iPhone)</span>
+                        </label>
+                        <label class="flex items-center gap-1.5 cursor-pointer">
+                            <input type="radio" name="profile" value="corporate" class="accent-[#CCFF00]">
+                            <span data-i18n="profile_corporate">Para mi Empresa (Slack/Teams)</span>
+                        </label>
+                    </div>
+                </form>
+
+                <div id="waitlist-feedback" class="hidden max-w-md mx-auto p-3 rounded-xl bg-neon/15 border border-neon/40 text-neon text-xs font-mono"></div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="border-t border-white/[0.08] py-8 px-4 text-center text-xs text-zinc-500 font-mono">
+        <div class="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div>EXNACKS.COM © 2026 — MICRO-WORKOUTS FOR REAL CLOTHES.</div>
+            <div class="flex items-center gap-5">
+                <a href="#hero-deck" onclick="triggerLuckySnack()" class="hover:text-neon transition">🎲 Random Exnack</a>
+                <a href="#catalog-section" class="hover:text-neon transition">Arsenal (8)</a>
+                <a href="#science-blog" class="hover:text-neon transition">VILPA Science</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- MODAL 1: METABOLIC BATTERY 9/9 DIALOG -->
+    <dialog id="body-modal" closedby="any" aria-labelledby="body-modal-title" class="w-full max-w-md p-4">
+        <div class="glass-panel w-full max-h-[88dvh] overflow-y-auto rounded-3xl p-6 sm:p-7 border border-neon/40 relative space-y-5 neon-glow text-left">
+            <div class="flex items-start justify-between gap-4">
+                <div>
+                    <div class="font-mono text-xs uppercase tracking-widest text-neon font-bold" data-i18n="modal_battery_tag">BATERÍA METABÓLICA 9/9</div>
+                    <h3 id="body-modal-title" class="text-2xl font-black text-white mt-0.5" data-i18n="modal_battery_title">Tu Estado Corporal Hoy</h3>
+                    <p class="text-xs text-zinc-400 mt-0.5" data-i18n="modal_battery_sub">Meta: 3 snacks diarios por cada zona anatómica</p>
+                </div>
+                <button onclick="closeBodyModal()" class="w-9 h-9 rounded-full bg-zinc-800/90 hover:bg-zinc-700 text-zinc-300 hover:text-white flex items-center justify-center font-bold shrink-0 border border-white/10" aria-label="Cerrar">
+                    ✕
+                </button>
+            </div>
+
+            <!-- Body Map / Zones Breakdown -->
+            <div class="space-y-2.5 bg-black/50 p-3.5 rounded-2xl border border-white/10">
+                <!-- Zone 1 -->
+                <button onclick="filterByZone(1)" class="w-full p-3 rounded-xl bg-zinc-900/90 border border-white/10 hover:border-neon cursor-pointer transition flex items-center justify-between group text-left">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-neon/15 text-neon font-bold flex items-center justify-center text-base group-hover:scale-105 transition">🧠</div>
+                        <div>
+                            <div class="text-xs font-bold text-white" data-i18n="modal_z1_name">Zona 1: Postura & SNC</div>
+                            <div class="text-[11px] text-zinc-400" data-i18n="modal_z1_desc">Descompresión, Cuello, Equilibrio</div>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <div id="modal-z1-count" class="font-mono text-sm font-black text-neon tabular-nums">0/3</div>
+                        <div class="text-[10px] font-mono text-zinc-500 group-hover:text-neon transition" data-i18n="modal_train_link">Entrenar →</div>
+                    </div>
+                </button>
+
+                <!-- Zone 2 -->
+                <button onclick="filterByZone(2)" class="w-full p-3 rounded-xl bg-zinc-900/90 border border-white/10 hover:border-stealth cursor-pointer transition flex items-center justify-between group text-left">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-stealth/15 text-stealth font-bold flex items-center justify-center text-base group-hover:scale-105 transition">🔥</div>
+                        <div>
+                            <div class="text-xs font-bold text-white" data-i18n="modal_z2_name">Zona 2: Core & Motor Muscular</div>
+                            <div class="text-[11px] text-zinc-400" data-i18n="modal_z2_desc">Cuádriceps, Sentadillas, Escaleras</div>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <div id="modal-z2-count" class="font-mono text-sm font-black text-stealth tabular-nums">0/3</div>
+                        <div class="text-[10px] font-mono text-zinc-500 group-hover:text-stealth transition" data-i18n="modal_train_link">Entrenar →</div>
+                    </div>
+                </button>
+
+                <!-- Zone 3 -->
+                <button onclick="filterByZone(3)" class="w-full p-3 rounded-xl bg-zinc-900/90 border border-white/10 hover:border-solar cursor-pointer transition flex items-center justify-between group text-left">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-solar/15 text-solar font-bold flex items-center justify-center text-base group-hover:scale-105 transition">⚡</div>
+                        <div>
+                            <div class="text-xs font-bold text-white" data-i18n="modal_z3_name">Zona 3: Bomba Sóleo & Glucosa</div>
+                            <div class="text-[11px] text-zinc-400" data-i18n="modal_z3_desc">Soleus push-ups, Pogo hops</div>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <div id="modal-z3-count" class="font-mono text-sm font-black text-solar tabular-nums">0/3</div>
+                        <div class="text-[10px] font-mono text-zinc-500 group-hover:text-solar transition" data-i18n="modal_train_link">Entrenar →</div>
+                    </div>
+                </button>
+            </div>
+
+            <!-- Weekly Streak & Calendar Strip -->
+            <div class="space-y-2">
+                <div class="flex justify-between items-center text-xs font-mono">
+                    <span class="text-zinc-400" data-i18n="modal_streak_label">RACHA ACTIVA (MÍN. 3/DÍA):</span>
+                    <span id="streak-days-val" class="font-bold text-neon">🔥 0 Días</span>
+                </div>
+                <div id="weekly-strip" class="grid grid-cols-7 gap-1.5 pt-1">
+                </div>
+            </div>
+
+            <div class="flex gap-2 pt-1">
+                <button onclick="copyPassportCard()" id="passport-share-btn" class="flex-1 py-3 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-white font-bold text-xs border border-white/15 transition">
+                    📋 <span data-i18n="btn_copy_passport">Copiar Pasaporte</span>
+                </button>
+                <button onclick="closeBodyModal()" class="flex-1 py-3 rounded-xl bg-neon hover:bg-[#d8ff33] text-black font-black text-xs transition">
+                    <span data-i18n="btn_close">Cerrar</span>
+                </button>
+            </div>
+        </div>
+    </dialog>
+
+    <!-- MODAL 2: SCIENCE ARTICLE DIALOG -->
+    <dialog id="article-modal" closedby="any" aria-labelledby="modal-title" class="w-full max-w-2xl p-4">
+        <div class="glass-panel w-full max-h-[88dvh] overflow-y-auto rounded-3xl p-6 sm:p-8 border border-white/15 relative text-left">
+            <div class="flex items-start justify-between gap-4 mb-2">
+                <div id="modal-tag" class="font-mono text-xs text-neon uppercase tracking-wider font-bold"></div>
+                <button onclick="closeArticleModal()" class="w-9 h-9 rounded-full bg-zinc-800 hover:bg-zinc-700 text-white flex items-center justify-center font-bold shrink-0 border border-white/10" aria-label="Cerrar">
+                    ✕
+                </button>
+            </div>
+            <h3 id="modal-title" class="text-2xl sm:text-3xl font-black text-white leading-tight mb-4"></h3>
+            <div id="modal-meta" class="flex items-center gap-3 text-xs font-mono text-zinc-400 pb-4 mb-6 border-b border-white/10"></div>
+            <div id="modal-body" class="space-y-4 text-zinc-200 text-sm sm:text-base leading-relaxed"></div>
+            
+            <div class="mt-8 pt-5 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-3">
+                <span class="text-xs font-mono text-zinc-400" data-i18n="article_cta_prompt">¿Listo para aplicar la ciencia en 60 segundos?</span>
+                <button onclick="trySnackFromArticle()" class="w-full sm:w-auto px-5 py-3 rounded-xl bg-neon hover:bg-[#d8ff33] text-black font-black text-xs uppercase tracking-wider transition">
+                    ⚡ <span data-i18n="article_cta_btn">Probar este Exnack ahora</span>
+                </button>
+            </div>
+        </div>
+    </dialog>
+
+    <!-- MODAL 3: WORKOUT COMPLETION DIALOG -->
+    <dialog id="completion-modal" closedby="any" aria-labelledby="complete-title" class="w-full max-w-sm p-4">
+        <div class="glass-panel w-full rounded-3xl p-6 border border-neon/40 text-center space-y-4 neon-glow">
+            <div class="w-14 h-14 rounded-2xl bg-neon text-black font-black text-2xl flex items-center justify-center mx-auto shadow-lg">
+                ✓
+            </div>
+            <div class="font-mono text-xs uppercase tracking-widest text-neon font-bold" id="complete-zone-tag">ZONA ACTIVADA</div>
+            <h3 id="complete-title" class="text-2xl font-black text-white" data-i18n="complete_heading">¡Batería Recargada!</h3>
+            <div id="complete-stats" class="text-xs font-mono text-zinc-300 bg-black/50 p-3.5 rounded-2xl border border-white/10 space-y-1.5"></div>
+            <div class="flex gap-2 pt-2">
+                <button onclick="copyShareStats()" id="share-btn" class="flex-1 py-3 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-white font-bold text-xs border border-white/15 transition">
+                    📋 <span data-i18n="btn_copy_card">Copiar Logro</span>
+                </button>
+                <button onclick="closeCompletionModal()" class="flex-1 py-3 rounded-xl bg-neon hover:bg-[#d8ff33] text-black font-black text-xs transition">
+                    <span data-i18n="btn_next_snack">Siguiente →</span>
+                </button>
+            </div>
+        </div>
+    </dialog>
+
+    <script>
+        let currentLang = 'es';
+        let currentFilter = 'all'; // 'all', 'stealth', 'vilpa', 'zone-1', 'zone-2', 'zone-3'
+        let currentSnackIndex = 0;
+        let timerInterval = null;
+        let timeLeft = 60;
+        let isRunning = false;
+        let isPaused = false;
+        let isPrepPhase = false;
+        let prepTimeLeft = 3;
+        let elapsedSeconds = 0;
+        let completedCycles = 0;
+        let soundEnabled = true;
+        let modalSnackTargetId = 'EX-01';
+
+        // Outer & Inner SVG Ring Circumferences (r=57 => 358.14, r=47 => 295.31)
+        const OUTER_CIRCUMFERENCE = 358.14;
+        const INNER_CIRCUMFERENCE = 295.31;
+
+        // Setup Light-Dismiss Fallback for <dialog closedby="any"> on browsers without native closedBy support (e.g., Safari)
+        function initDialogLightDismiss() {
+            document.querySelectorAll('dialog[closedby="any"]').forEach(dialog => {
+                if (!('closedBy' in HTMLDialogElement.prototype)) {
+                    dialog.addEventListener('click', (event) => {
+                        if (event.target !== dialog) return;
+                        const rect = dialog.getBoundingClientRect();
+                        const isDialogContent = (
+                            rect.top <= event.clientY &&
+                            event.clientY <= rect.top + rect.height &&
+                            rect.left <= event.clientX &&
+                            event.clientX <= rect.left + rect.width
+                        );
+                        if (!isDialogContent) dialog.close();
+                    });
+                }
+            });
+        }
+
+        // LocalStorage State Management for 9-Snack Daily Protocol & Streaks
+        function getTodayKey() {
+            const d = new Date();
+            return d.toISOString().split('T')[0];
+        }
+
+        function loadStorageState() {
+            const today = getTodayKey();
+            let data = {};
+            try {
+                data = JSON.parse(localStorage.getItem('exnacks_state') || '{}');
+            } catch (e) {
+                data = {};
+            }
+            if (!data[today]) {
+                data[today] = { z1: 0, z2: 0, z3: 0, completedIds: [] };
+            }
+            if (!Array.isArray(data[today].completedIds)) {
+                data[today].completedIds = [];
+            }
+            return data;
+        }
+
+        function saveStorageState(data) {
+            try {
+                localStorage.setItem('exnacks_state', JSON.stringify(data));
+            } catch (e) {}
+            updateHeaderStreakAndScore();
+            renderSnackSelectorStrip();
+            renderCatalogGrid();
+        }
+
+        function getTodayCounts() {
+            const data = loadStorageState();
+            return data[getTodayKey()] || { z1: 0, z2: 0, z3: 0, completedIds: [] };
+        }
+
+        function calculateStreak() {
+            const data = loadStorageState();
+            let streak = 0;
+            let d = new Date();
+            
+            while (true) {
+                const key = d.toISOString().split('T')[0];
+                const dayData = data[key];
+                const totalToday = dayData ? (dayData.z1 + dayData.z2 + dayData.z3) : 0;
+                
+                if (totalToday >= 3) {
+                    streak++;
+                    d.setDate(d.getDate() - 1);
+                } else {
+                    if (streak === 0 && key === getTodayKey()) {
+                        d.setDate(d.getDate() - 1);
+                        const prevKey = d.toISOString().split('T')[0];
+                        const prevData = data[prevKey];
+                        if (prevData && (prevData.z1 + prevData.z2 + prevData.z3) >= 3) {
+                            streak++;
+                            d.setDate(d.getDate() - 1);
+                            continue;
+                        }
+                    }
+                    break;
+                }
+            }
+            return streak;
+        }
+
+        function updateHeaderStreakAndScore() {
+            const counts = getTodayCounts();
+            const total = counts.z1 + counts.z2 + counts.z3;
+            const streak = calculateStreak();
+
+            document.getElementById('header-streak').textContent = `🔥 ${streak}d`;
+            document.getElementById('header-score').textContent = `⚡ ${total}/9`;
+
+            // Top bar 3-zone counts
+            document.getElementById('top-z1-count').textContent = `${counts.z1}/3`;
+            document.getElementById('top-z2-count').textContent = `${counts.z2}/3`;
+            document.getElementById('top-z3-count').textContent = `${counts.z3}/3`;
+
+            const bar1 = document.getElementById('hmb-1');
+            const bar2 = document.getElementById('hmb-2');
+            const bar3 = document.getElementById('hmb-3');
+
+            bar1.className = `w-2 h-3.5 rounded-sm transition-colors ${counts.z1 >= 3 ? 'bg-neon' : counts.z1 > 0 ? 'bg-neon/50' : 'bg-zinc-700'}`;
+            bar2.className = `w-2 h-3.5 rounded-sm transition-colors ${counts.z2 >= 3 ? 'bg-stealth' : counts.z2 > 0 ? 'bg-stealth/50' : 'bg-zinc-700'}`;
+            bar3.className = `w-2 h-3.5 rounded-sm transition-colors ${counts.z3 >= 3 ? 'bg-solar' : counts.z3 > 0 ? 'bg-solar/50' : 'bg-zinc-700'}`;
+        }
+
+        // Curated Exercise Snacks Database (3 Zones Balanced)
+        const EXNACKS_DB = [
+            {
+                id: 'EX-01',
+                zone: 3,
+                zoneName: { es: '⚡ ZONA 3: BOMBA SÓLEO & GLUCOSA', en: '⚡ ZONE 3: SOLEUS & GLUCOSE PUMP' },
+                category: 'stealth',
+                stealthLevel: { es: '🕵️‍♂️ 100% INVISIBLE', en: '🕵️‍♂️ 100% INVISIBLE' },
+                sweatLevel: { es: '💧 CERO SUDOR', en: '💧 ZERO SWEAT' },
+                title: { es: 'Soleus Push-Ups Bajo el Escritorio', en: 'Under-Desk Soleus Push-Ups' },
+                subtitle: { es: 'Aspiradora metabólica de glucosa sin levantarte de tu silla', en: 'Metabolic glucose vacuum without leaving your office chair' },
+                cadence: '1s SUBE / 1s BAJA',
+                repsGoal: '30 REPS',
+                targetCycles: 30,
+                unitLabel: { es: 'REPS', en: 'REPS' },
+                roiShort: { es: '-52% Pico Glucosa', en: '-52% Glucose Spike' },
+                location: { es: '📍 Sentado en tu escritorio o en junta', en: '📍 Seated at your desk or meeting' },
+                instructions: {
+                    es: 'Sentado con los pies planos en el suelo bajo tu escritorio, eleva los talones al máximo contrayendo fuerte las pantorrillas en el pulso verde y baja con control en el pulso azul.',
+                    en: 'Seated with feet flat under your desk, raise heels squeezing calves hard on green pulse, lower with control on blue pulse.'
+                },
+                science: {
+                    es: 'Evidencia (Dr. Marc Hamilton, Univ. Houston): El músculo sóleo consume glucosa y lípidos sanguíneos directamente sin glucógeno, reduciendo picos de insulina un 52%.',
+                    en: 'Evidence (Dr. Marc Hamilton, Univ. of Houston): Soleus oxidizes blood glucose and lipids directly, cutting post-meal insulin spikes by 52%.'
+                },
+                phases: [
+                    { duration: 1, type: 'work', scale: 1.22, label: { es: '1s SUBE', en: '1s LIFT' }, cue: { es: '▲ SUBE Y CONTRAE TALONES', en: '▲ LIFT & SQUEEZE HEELS' } },
+                    { duration: 1, type: 'rest', scale: 0.92, label: { es: '1s BAJA', en: '1s LOWER' }, cue: { es: '▼ BAJA CONTROLADO', en: '▼ LOWER WITH CONTROL' } }
+                ],
+                svg: `<svg viewBox="0 0 64 64" class="w-12 h-12 stroke-current" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 50h40" stroke-opacity="0.3"/><path d="M20 18v16l14 4-4 12"/><circle cx="20" cy="11" r="4"/><path d="M30 50l14-7" class="text-white"/><path d="M46 35l4-4m-4 4l-4-4" stroke-width="2.5"/></svg>`
+            },
+            {
+                id: 'EX-02',
+                zone: 2,
+                zoneName: { es: '🔥 ZONA 2: CORE & MOTOR MUSCULAR', en: '🔥 ZONE 2: CORE & MOTOR MUSCLE' },
+                category: 'vilpa',
+                stealthLevel: { es: '🚪 ESCALERAS / PASILLO', en: '🚪 STAIRWELL / HALLWAY' },
+                sweatLevel: { es: '💧 SIN SUDAR (60s)', en: '💧 NO SWEAT (60s)' },
+                title: { es: 'Escaleras VILPA (Potencia Vertical)', en: 'Stairwell VILPA (Vertical Power)' },
+                subtitle: { es: 'Dispara tu VO2 max en 60 segundos subiendo escaleras a ritmo vivo', en: 'Spike your VO2 max in 60 seconds with brisk stair intervals' },
+                cadence: '1 PASO / SEGUNDO',
+                repsGoal: '60 ESCALONES',
+                targetCycles: 30,
+                unitLabel: { es: 'CICLOS', en: 'CYCLES' },
+                roiShort: { es: '+VO2 Max / VILPA', en: '+VO2 Max / VILPA' },
+                location: { es: '📍 Cubo de escaleras del edificio', en: '📍 Building stairwell' },
+                instructions: {
+                    es: 'Sube las escaleras siguiendo el metrónomo: empuja fuerte con pierna derecha en el pulso verde e izquierda en el pulso ámbar. Ritmo firme constante.',
+                    en: 'Climb stairs matching the metronome: push firmly with right leg on green pulse and left on amber pulse. Steady brisk pace.'
+                },
+                science: {
+                    es: 'Evidencia (Nature Medicine): 3 episodios diarios de 60s de subida vigorosa aumentan el VO2 max y reducen un 38% la mortalidad cardiovascular.',
+                    en: 'Evidence (Nature Medicine): Three 60s daily stair bouts boost cardiorespiratory fitness and correlate with 38% lower cardiovascular mortality.'
+                },
+                phases: [
+                    { duration: 1, type: 'work', scale: 1.18, label: { es: '1s PASO DER', en: '1s STEP R' }, cue: { es: '⚡ PASO FIRME (EMPUJA)', en: '⚡ STEP DRIVE (PUSH)' } },
+                    { duration: 1, type: 'hold', scale: 1.02, label: { es: '1s PASO IZQ', en: '1s STEP L' }, cue: { es: '⚡ PASO CONTINUO (RITMO)', en: '⚡ KEEP CLIMBING (PACE)' } }
+                ],
+                svg: `<svg viewBox="0 0 64 64" class="w-12 h-12 stroke-current" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M10 52h12V40h12V28h12V16h10" class="text-white"/><path d="M18 32l10-10m0 0h-7m7 0v7"/></svg>`
+            },
+            {
+                id: 'EX-03',
+                zone: 2,
+                zoneName: { es: '🔥 ZONA 2: CORE & MOTOR MUSCULAR', en: '🔥 ZONE 2: CORE & MOTOR MUSCLE' },
+                category: 'stealth',
+                stealthLevel: { es: '🕵️‍♂️ 100% INVISIBLE', en: '🕵️‍♂️ 100% INVISIBLE' },
+                sweatLevel: { es: '💧 CERO SUDOR', en: '💧 ZERO SWEAT' },
+                title: { es: 'Isometría de Cuádriceps contra el Piso', en: 'Seated Floor-Press Quad Isometric' },
+                subtitle: { es: 'Reclutamiento neuromuscular pesado sin moverte ni un milímetro', en: 'Heavy neuromuscular recruitment without moving a millimeter' },
+                cadence: '5s FUERTE / 3s RELAJA',
+                repsGoal: '7 PULSOS',
+                targetCycles: 7,
+                unitLabel: { es: 'PULSOS', en: 'PULSES' },
+                roiShort: { es: '-Presión Arterial', en: '-Blood Pressure' },
+                location: { es: '📍 En plena videollamada o escritorio', en: '📍 Mid-Zoom call or desk' },
+                instructions: {
+                    es: 'Empuja ambos pies contra el piso al 75% de tu fuerza apretando cuádriceps y glúteos durante los 5s verdes. Suelta y respira durante los 3s azules.',
+                    en: 'Drive both feet into the floor at 75% effort squeezing quads and glutes for 5s green. Release and breathe for 3s blue.'
+                },
+                science: {
+                    es: 'Evidencia (BJSM): Las contracciones isométricas superan a otras modalidades para reducir la presión arterial sistólica y diastólica en reposo.',
+                    en: 'Evidence (BJSM): Isometric contractions are the #1 exercise modality for lowering resting systolic and diastolic blood pressure.'
+                },
+                phases: [
+                    { duration: 5, type: 'work', scale: 1.24, label: { es: '5s EMPUJA (75%)', en: '5s PRESS (75%)' }, cue: { es: '🔥 EMPUJA EL PISO (75% FUERZA)', en: '🔥 PRESS FLOOR HARD (75%)' } },
+                    { duration: 3, type: 'rest', scale: 0.90, label: { es: '3s RELAJA', en: '3s RELAX' }, cue: { es: '😮‍💨 SUELTA Y RELAJA PIERNA', en: '😮‍💨 RELEASE & RELAX LEGS' } }
+                ],
+                svg: `<svg viewBox="0 0 64 64" class="w-12 h-12 stroke-current" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><rect x="16" y="14" width="32" height="24" rx="4" stroke-opacity="0.4"/><path d="M24 42v10m16-10v10" class="text-white"/><path d="M20 48l4 4 4-4m8 0l4 4 4-4"/><line x1="12" y1="56" x2="52" y2="56"/></svg>`
+            },
+            {
+                id: 'EX-04',
+                zone: 1,
+                zoneName: { es: '🧠 ZONA 1: POSTURA & SNC', en: '🧠 ZONE 1: POSTURA & CNS' },
+                category: 'stealth',
+                stealthLevel: { es: '🕵️‍♂️ PARECE ESTIRAMIENTO', en: '🕵️‍♂️ LOOKS NATURAL' },
+                sweatLevel: { es: '💧 CERO SUDOR', en: '💧 ZERO SWEAT' },
+                title: { es: 'Descompresión Torácica "Anti-Laptop"', en: '"Anti-Laptop" Thoracic Decompression' },
+                subtitle: { es: 'Resetea tu postura cervical y expande tu capacidad pulmonar en 60s', en: 'Reset cervical posture and expand ribcage oxygen intake in 60s' },
+                cadence: '4s INHALA / 2s SOSTÉN / 4s EXHALA',
+                repsGoal: '6 CICLOS',
+                targetCycles: 6,
+                unitLabel: { es: 'CICLOS', en: 'CYCLES' },
+                roiShort: { es: '+HRV / -Cortisol', en: '+HRV / -Cortisol' },
+                location: { es: '📍 Sentado en tu silla', en: '📍 Seated in your chair' },
+                instructions: {
+                    es: '4 segundos inhalando profundo mientras abres el pecho, 2 segundos apretando escápulas atrás en retención, y 4 segundos exhalando lento.',
+                    en: '4s inhaling deeply while opening chest, 2s squeezing shoulder blades in hold, and 4s slow controlled exhale.'
+                },
+                science: {
+                    es: 'Evidencia Biomecánica: La extensión torácica activa revierte la cifosis por pantallas y estimula el nervio vago reduciendo el cortisol.',
+                    en: 'Biomechanical Evidence: Active thoracic extension reverses postural creep from screen time and improves vagal tone.'
+                },
+                phases: [
+                    { duration: 4, type: 'work', scale: 1.24, label: { es: '4s INHALA', en: '4s INHALE' }, cue: { es: '🌬️ INHALA Y ABRE ESTERNÓN', en: '🌬️ INHALE & OPEN CHEST' } },
+                    { duration: 2, type: 'hold', scale: 1.24, label: { es: '2s SOSTÉN', en: '2s HOLD' }, cue: { es: '🔒 SOSTÉN (JUNTA ESCÁPULAS)', en: '🔒 HOLD (SQUEEZE SCAPULAE)' } },
+                    { duration: 4, type: 'rest', scale: 0.88, label: { es: '4s EXHALA', en: '4s EXHALE' }, cue: { es: '💨 EXHALA LENTO Y BAJA HOMBROS', en: '💨 SLOW EXHALE & DROP SHOULDERS' } }
+                ],
+                svg: `<svg viewBox="0 0 64 64" class="w-12 h-12 stroke-current" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><circle cx="32" cy="16" r="6"/><path d="M32 24v24" class="text-white"/><path d="M16 28c6-4 26-4 32 0"/><path d="M12 22l4 6-6 2m42-8l-4 6 6 2"/></svg>`
+            },
+            {
+                id: 'EX-05',
+                zone: 2,
+                zoneName: { es: '🔥 ZONA 2: CORE & MOTOR MUSCULAR', en: '🔥 ZONE 2: CORE & MOTOR MUSCLE' },
+                category: 'vilpa',
+                stealthLevel: { es: '🏠 PRIVADO / OFICINA CERRADA', en: '🏠 PRIVATE / HOME OFFICE' },
+                sweatLevel: { es: '⚡ ALTA ACTIVACIÓN', en: '⚡ HIGH ACTIVATION' },
+                title: { es: 'Sentadillas al Aire con Pausa Reactiva', en: 'Reactive Tempo Air Squats' },
+                subtitle: { es: 'El rey del transporte de glucosa GLUT4 hacia los músculos grandes', en: 'The king of GLUT4 glucose transport into your largest muscle groups' },
+                cadence: '2s BAJA / 1s SUBE RÁPIDO',
+                repsGoal: '20 REPS',
+                targetCycles: 20,
+                unitLabel: { es: 'REPS', en: 'REPS' },
+                roiShort: { es: '+GLUT4 / Piernas', en: '+GLUT4 / Lower Body' },
+                location: { es: '📍 Home Office o sala privada', en: '📍 Home Office or private room' },
+                instructions: {
+                    es: 'Baja controlado durante los 2s azules manteniendo talones apoyados. En cuanto suene el tono agudo verde (1s), sube con velocidad explosiva.',
+                    en: 'Lower under control for 2s blue keeping heels planted. On the sharp green tone (1s), drive up with crisp concentric speed.'
+                },
+                science: {
+                    es: 'Evidencia (Scand J Med Sci Sports): Hacer 15-20 sentadillas interrumpiendo la silla regula mejor la glucemia que una caminata continua de 30 min.',
+                    en: 'Evidence: Brief squats breaking up prolonged sitting regulate blood glucose more effectively than a single 30-minute walk.'
+                },
+                phases: [
+                    { duration: 2, type: 'rest', scale: 0.86, label: { es: '2s BAJA', en: '2s LOWER' }, cue: { es: '▼ BAJA CONTROLADO (2s)', en: '▼ LOWER IN CONTROL (2s)' } },
+                    { duration: 1, type: 'work', scale: 1.25, label: { es: '1s EXPLOTA', en: '1s DRIVE' }, cue: { es: '⚡ ¡SUBE EXPLOSIVO! (1s)', en: '⚡ DRIVE UP FAST! (1s)' } }
+                ],
+                svg: `<svg viewBox="0 0 64 64" class="w-12 h-12 stroke-current" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><circle cx="32" cy="12" r="5"/><path d="M32 18l-6 14h14l-4 16" class="text-white"/><path d="M26 32l-6 16"/><path d="M48 20v24m0-24l-4 4m4-4l4 4"/></svg>`
+            },
+            {
+                id: 'EX-06',
+                zone: 1,
+                zoneName: { es: '🧠 ZONA 1: POSTURA & SNC', en: '🧠 ZONE 1: POSTURE & CNS' },
+                category: 'stealth',
+                stealthLevel: { es: '🕵️‍♂️ FILA DEL CAFÉ / ELEVADOR', en: '🕵️‍♂️ COFFEE LINE STEALTH' },
+                sweatLevel: { es: '💧 CERO SUDOR', en: '💧 ZERO SWEAT' },
+                title: { es: 'Equilibrio Monopodal de Longevidad', en: 'Single-Leg Longevity Balance' },
+                subtitle: { es: 'El test neurológico y propioceptivo más correlacionado con vivir más', en: 'The neurological stability snack strongly correlated with longevity' },
+                cadence: '30s IZQUIERDA / 30s DERECHA',
+                repsGoal: '2 LADOS × 30s',
+                targetCycles: 2,
+                unitLabel: { es: 'LADOS', en: 'SIDES' },
+                roiShort: { es: '+Estabilidad / SNC', en: '+Stability / CNS' },
+                location: { es: '📍 De pie esperando el café o elevador', en: '📍 Standing by coffee machine' },
+                instructions: {
+                    es: 'Sostén el equilibrio sobre tu pierna izquierda los primeros 30s. A la mitad escucharás una alerta doble para cambiar a la pierna derecha.',
+                    en: 'Balance on your left leg for the first 30s. At the halfway mark you will hear a double chime to switch to your right leg.'
+                },
+                science: {
+                    es: 'Evidencia (BJSM Estudio 10 años): La capacidad de sostener el equilibrio monopodal predice la supervivencia y la integridad cerebelosa.',
+                    en: 'Evidence (BJSM 10-Year Study): Single-leg stance capability integrates vestibular and somatosensory cortex health.'
+                },
+                phases: [
+                    { duration: 30, type: 'work', scale: 1.15, label: { es: '30s PIERNA IZQ', en: '30s LEFT LEG' }, cue: { es: '🦵 EQUILIBRIO PIERNA IZQUIERDA', en: '🦵 BALANCE: LEFT LEG' } },
+                    { duration: 30, type: 'switch', scale: 1.15, label: { es: '30s PIERNA DER', en: '30s RIGHT LEG' }, cue: { es: '🔄 ¡CAMBIO! PIERNA DERECHA', en: '🔄 SWITCH! RIGHT LEG' } }
+                ],
+                svg: `<svg viewBox="0 0 64 64" class="w-12 h-12 stroke-current" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><circle cx="32" cy="12" r="5"/><path d="M32 18v34" class="text-white"/><path d="M32 32l12 6-6 6"/><path d="M20 26h24"/></svg>`
+            },
+            {
+                id: 'EX-07',
+                zone: 1,
+                zoneName: { es: '🧠 ZONA 1: POSTURA & SNC', en: '🧠 ZONE 1: POSTURE & CNS' },
+                category: 'stealth',
+                stealthLevel: { es: '🕵️‍♂️ 100% INVISIBLE', en: '🕵️‍♂️ 100% INVISIBLE' },
+                sweatLevel: { es: '💧 CERO SUDOR', en: '💧 ZERO SWEAT' },
+                title: { es: 'Retracción Cervical y Escapular en Silla', en: 'Seated Cervical & Scapular Retraction' },
+                subtitle: { es: 'Elimina la tensión de cuello y alinea tu columna en 60 segundos', en: 'Eliminate neck strain and align your spine in 60 seconds' },
+                cadence: '3s RETRAE / 2s RELAJA',
+                repsGoal: '12 REPS',
+                targetCycles: 12,
+                unitLabel: { es: 'REPS', en: 'REPS' },
+                roiShort: { es: '-Dolor Cervical', en: '-Neck Strain' },
+                location: { es: '📍 Sentado frente al monitor', en: '📍 Seated at monitor' },
+                instructions: {
+                    es: 'Desliza tu barbilla horizontalmente hacia atrás y junta las escápulas durante 3s (verde). Suelta suavemente durante 2s (azul).',
+                    en: 'Glide your chin horizontally straight back and squeeze shoulder blades for 3s green. Release gently for 2s blue.'
+                },
+                science: {
+                    es: 'Evidencia Ergonómica: Desactiva los puntos gatillo del trapecio superior y activa los flexores cervicales profundos inhibidos por el monitor.',
+                    en: 'Ergonomic Evidence: Reverses tonic overload in upper trapezius and activates deep cervical flexors inhibited by screens.'
+                },
+                phases: [
+                    { duration: 3, type: 'work', scale: 1.2, label: { es: '3s RETRAE', en: '3s RETRACT' }, cue: { es: '🔙 RETRAE BARBILLA Y ESCÁPULAS', en: '🔙 RETRACT CHIN & SCAPULAE' } },
+                    { duration: 2, type: 'rest', scale: 0.9, label: { es: '2s RELAJA', en: '2s RELEASE' }, cue: { es: '😮‍💨 SUELTA SUAVE', en: '😮‍💨 RELEASE GENTLY' } }
+                ],
+                svg: `<svg viewBox="0 0 64 64" class="w-12 h-12 stroke-current" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><circle cx="32" cy="18" r="6"/><path d="M32 24v20m-8-12h16" class="text-white"/><path d="M22 52l10-8 10 8"/></svg>`
+            },
+            {
+                id: 'EX-08',
+                zone: 3,
+                zoneName: { es: '⚡ ZONA 3: BOMBA SÓLEO & GLUCOSA', en: '⚡ ZONE 3: SOLEUS & GLUCOSE PUMP' },
+                category: 'vilpa',
+                stealthLevel: { es: '🕵️‍♂️ DISCRETO DE PIE', en: '🕵️‍♂️ STANDING DISCREET' },
+                sweatLevel: { es: '💧 CERO SUDOR', en: '💧 ZERO SWEAT' },
+                title: { es: 'Pogo Hops Silenciosos (Muelles de Tobillo)', en: 'Silent Ankle Pogo Spring Hops' },
+                subtitle: { es: 'Retorno venoso y rigidez tendinosa de bajo impacto sin hacer ruido', en: 'Low-impact venous return and tendon stiffness without noise' },
+                cadence: '1s PULSO ELÁSTICO',
+                repsGoal: '60 PULSOS',
+                targetCycles: 30,
+                unitLabel: { es: 'CICLOS', en: 'CYCLES' },
+                roiShort: { es: '+Retorno Venoso', en: '+Venous Return' },
+                location: { es: '📍 De pie junto al escritorio o cocina', en: '📍 Standing by desk or kitchen' },
+                instructions: {
+                    es: 'Apóyate sobre la bola de los pies y realiza micro-rebotes rápidos y silenciosos usando la elasticidad natural de tus pantorrillas.',
+                    en: 'Rise onto the balls of your feet and perform rapid, silent micro-bounces utilizing natural calf and Achilles elasticity.'
+                },
+                science: {
+                    es: 'Evidencia Pliométrica: Los pulsos elásticos activan la bomba venosa distal, combatiendo el estancamiento sanguíneo en piernas tras horas sentado.',
+                    en: 'Plyometric Evidence: Low-amplitude springing activates the distal venous pump, clearing lower-limb blood pooling.'
+                },
+                phases: [
+                    { duration: 1, type: 'work', scale: 1.2, label: { es: '1s REBOTE A', en: '1s SPRING A' }, cue: { es: '⚡ REBOTE ELÁSTICO (SUAVE)', en: '⚡ ELASTIC BOUNCE (SOFT)' } },
+                    { duration: 1, type: 'rest', scale: 0.92, label: { es: '1s REBOTE B', en: '1s SPRING B' }, cue: { es: '⚡ REBOTE ELÁSTICO (RITMO)', en: '⚡ ELASTIC BOUNCE (PACE)' } }
+                ],
+                svg: `<svg viewBox="0 0 64 64" class="w-12 h-12 stroke-current" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><circle cx="32" cy="12" r="4"/><path d="M32 16v20m-8 16l8-12 8 12" class="text-white"/><path d="M16 44h32"/></svg>`
+            }
+        ];
+
+        const BLOG_ARTICLES = [
+            {
+                id: 'art-1',
+                relatedSnackId: 'EX-01',
+                readTime: '2 MIN READ',
+                tag: { es: 'METABOLISMO STEALTH', en: 'STEALTH METABOLISM' },
+                title: {
+                    es: 'Por qué tu gimnasio de las 7:00 PM no te salva de 9 horas sentado (y el músculo oculto que sí)',
+                    en: 'Why Your 7 PM Gym Session Doesn’t Undo 9 Hours of Sitting (And the Hidden Muscle That Does)'
+                },
+                excerpt: {
+                    es: 'El fenómeno del "Active Couch Potato": puedes correr en la mañana y aun así tener tus enzimas apagadas a las 3:00 PM.',
+                    en: 'The "Active Couch Potato" paradox: you can run at dawn and still have your lipid enzymes shut down by 3:00 PM.'
+                },
+                body: {
+                    es: `
+                        <p>Durante décadas creímos que entrenar una hora compensaba pasar el resto del día inmóvil frente a un monitor. La fisiología moderna demostró que el sedentarismo prolongado y el ejercicio son variables independientes.</p>
+                        <h4 class="text-white font-bold text-lg pt-2">El apagón enzimático de los 90 minutos</h4>
+                        <p>Cuando tus músculos pasan más de 90 minutos sin tensión mecánica, la actividad de la <strong>lipoproteína lipasa (LPL)</strong> cae hasta un 90% y los transportadores GLUT4 se retiran del sarcolema.</p>
+                        <h4 class="text-white font-bold text-lg pt-2">La solución invisible bajo el escritorio</h4>
+                        <p>El Dr. Marc Hamilton demostró que el <strong>músculo sóleo</strong> posee una maquinaria oxidativa capaz de consumir glucosa y triglicéridos directamente de la sangre mediante elevaciones de talón sentado (<em>Soleus Push-Ups</em>), reduciendo un 52% los picos de insulina sin sudar.</p>
+                    `,
+                    en: `
+                        <p>For decades we assumed a workout erased a full workday in a chair. Modern physiology shows prolonged sitting triggers metabolic shutdowns independent of daily exercise.</p>
+                        <h4 class="text-white font-bold text-lg pt-2">The 90-Minute Enzyme Shutdown</h4>
+                        <p>After 90 minutes of unloading, <strong>lipoprotein lipase (LPL)</strong> activity drops up to 90%, and GLUT4 glucose transporters retreat inside cells.</p>
+                        <h4 class="text-white font-bold text-lg pt-2">The Zero-Awkwardness Fix</h4>
+                        <p>Dr. Marc Hamilton’s lab demonstrated that activating the <strong>soleus muscle</strong> while seated cuts postprandial glucose spikes by 52% completely unseen under your desk.</p>
+                    `
+                }
+            },
+            {
+                id: 'art-2',
+                relatedSnackId: 'EX-02',
+                readTime: '2.5 MIN READ',
+                tag: { es: 'LONGEVIDAD & VO2 MAX', en: 'LONGEVITY & VO2 MAX' },
+                title: {
+                    es: 'El Efecto VILPA: Cómo micro-dosis de 60s reducen un 40% el riesgo cardiovascular',
+                    en: 'The VILPA Effect: How 60s Micro-Bouts Cut Cardiovascular Risk by 40%'
+                },
+                excerpt: {
+                    es: 'Un estudio en Nature Medicine con 25,241 adultos redefinió para siempre la dosis mínima efectiva de movimiento humano.',
+                    en: 'A Nature Medicine accelerometer study of 25,241 adults redefined the minimum effective dose of movement.'
+                },
+                body: {
+                    es: `
+                        <p>Investigadores de la Universidad de Sídney analizaron datos de acelerometría de alta resolución en más de 25,000 adultos y descubrieron el impacto de <strong>VILPA</strong> (Vigorous Intermittent Lifestyle Physical Activity).</p>
+                        <h4 class="text-white font-bold text-lg pt-2">60 Segundos Antes de Romper a Sudar</h4>
+                        <p>Ráfagas de apenas 60 segundos como subir escaleras a paso firme, distribuidas a lo largo del día, se asociaron con una reducción de 38% a 40% en mortalidad cardiovascular. Al durar solo un minuto, la respuesta termorreguladora de sudoración no llega a dispararse.</p>
+                    `,
+                    en: `
+                        <p>Researchers publishing in <em>Nature Medicine</em> discovered the power of <strong>VILPA</strong> (Vigorous Intermittent Lifestyle Physical Activity) using wrist accelerometers.</p>
+                        <h4 class="text-white font-bold text-lg pt-2">60 Seconds Before Breaking a Sweat</h4>
+                        <p>One-minute bouts like brisk stair climbing distributed across the day correlated with a 38–40% reduction in cardiovascular mortality—finishing right before thermoregulatory sweating begins.</p>
+                    `
+                }
+            },
+            {
+                id: 'art-3',
+                relatedSnackId: 'EX-04',
+                readTime: '2 MIN READ',
+                tag: { es: 'NEUROBIOLOGÍA & POSTURA', en: 'NEUROBIOLOGY & POSTURE' },
+                title: {
+                    es: 'Cifosis Digital y Nervio Vago: Por qué tu postura frente al monitor dispara tu cortisol',
+                    en: 'Screen Kyphosis & Vagal Tone: Why Slouching Spikes Your Workday Cortisol'
+                },
+                excerpt: {
+                    es: 'Cada centímetro de cabeza adelantada añade 4.5 kg de tensión cervical y restringe un 30% la excursión diafragmática.',
+                    en: 'Every inch of forward head posture adds 10 lbs of cervical load and restricts diaphragmatic excursion by 30%.'
+                },
+                body: {
+                    es: `
+                        <p>Cuando te encorvas frente al laptop, tu caja torácica se comprime y tu respiración pasa de ser diafragmática a apical (superficial). Este patrón envía señales aferentes de alerta simpática al tronco encefálico.</p>
+                        <h4 class="text-white font-bold text-lg pt-2">El Reset de 60 Segundos</h4>
+                        <p>Combinar extensión torácica activa con inhalaciones de 4 segundos y exhalaciones controladas reabre el ángulo costodiafragmático y estimula el nervio vago, elevando la variabilidad de la frecuencia cardíaca (HRV) en un solo minuto.</p>
+                    `,
+                    en: `
+                        <p>Slouching toward a laptop compresses the ribcage and shifts breathing from diaphragmatic to shallow chest breathing, signaling sympathetic stress to the brainstem.</p>
+                        <h4 class="text-white font-bold text-lg pt-2">The 60-Second Vagal Reset</h4>
+                        <p>Pairing active thoracic extension with 4-second inhalations and slow exhalations restores ribcage mechanics and increases Heart Rate Variability (HRV) within 60 seconds.</p>
+                    `
+                }
+            }
+        ];
+
+        const I18N = {
+            es: {
+                nav_subtitle: 'MICRO-DOSIS SIN SUDOR',
+                nav_deck: 'Entrenador',
+                nav_catalog: 'Catálogo (8)',
+                nav_calc: 'Calculadora',
+                nav_science: 'Ciencia',
+                z1_short: 'Z1: Postura',
+                z2_short: 'Z2: Motor',
+                z3_short: 'Z3: Sóleo',
+                filter_all: 'Todos (8)',
+                filter_stealth: 'Oficina (Sin Pena)',
+                filter_vilpa: 'VILPA / Potencia',
+                cadence_label: 'CADENCIA',
+                reps_est: 'META (60s)',
+                roi_label: 'IMPACTO BIO',
+                how_to_label: '⚡ PROTOCOLO DE EJECUCIÓN',
+                btn_start: 'INICIAR EXNACK (60s)',
+                btn_pause: 'PAUSAR',
+                btn_resume: 'REANUDAR',
+                btn_lucky: 'Al azar',
+                scroll_science: 'Ver catálogo completo y calculadora',
+                kbd_play: 'Iniciar/Pausa',
+                kbd_nav: 'Cambiar',
+                kbd_random: 'Azar',
+                catalog_badge: 'ARSENAL BIOMECÁNICO • 8 MICRO-DOSIS',
+                catalog_heading: 'Explora por Zona Anatómica',
+                catalog_subheading: 'Selecciona cualquier ejercicio para cargarlo en el temporizador interactivo. Combina 3 de cada zona para completar tu batería 9/9.',
+                calc_tag: 'CALCULADORA DE DESACTIVACIÓN SEDENTARIA',
+                calc_title: '¿Cuántas horas pasas sentado al día?',
+                calc_desc: 'Después de 90 minutos continuos sin contracción muscular, la enzima lipoproteína lipasa (LPL) cae hasta un 90% y tu sensibilidad a la insulina se desploma. Una hora de gimnasio en la noche no revierte 9 horas de inmovilidad celular.',
+                calc_load_label: 'CARGA DE INACTIVIDAD ENZIMÁTICA:',
+                hours_sitting: 'HORAS SENTADO HOY:',
+                calc_prescription: 'Dosis mínima efectiva:',
+                calc_frequency: 'Frecuencia ideal:',
+                calc_time: 'Tiempo total invertido:',
+                calc_risk: 'Reducción riesgo CV (VILPA):',
+                calc_cta: '⚡ Iniciar 1er Exnack Recomendado Ahora',
+                blog_badge: 'CIENCIA APLICADA • CERO HUMO',
+                blog_heading: 'Por qué 60 segundos cambian tu fisiología',
+                blog_subheading: 'Artículos de 2 minutos respaldados por fisiología del ejercicio, telemetría y longevidad.',
+                waitlist_badge: 'PRÓXIMAMENTE EN iOS, APPLE WATCH & SLACK',
+                waitlist_title: 'Deja que el acelerómetro cuente tus repeticiones.',
+                waitlist_desc: 'Estamos construyendo la app nativa de Exnacks con widget de "Batería Metabólica" en tu pantalla de bloqueo y detección automática en escaleras y sóleo bajo el escritorio.',
+                waitlist_btn: 'Unirme al Beta',
+                profile_personal: 'Uso Personal (Watch/iPhone)',
+                profile_corporate: 'Para mi Empresa (Slack/Teams)',
+                read_article: 'Leer ciencia (2 min) →',
+                modal_battery_tag: 'BATERÍA METABÓLICA 9/9',
+                modal_battery_title: 'Tu Estado Corporal Hoy',
+                modal_battery_sub: 'Meta: 3 snacks diarios por cada zona anatómica',
+                modal_z1_name: 'Zona 1: Postura & SNC',
+                modal_z1_desc: 'Descompresión, Cuello, Equilibrio',
+                modal_z2_name: 'Zona 2: Core & Motor Muscular',
+                modal_z2_desc: 'Cuádriceps, Sentadillas, Escaleras',
+                modal_z3_name: 'Zona 3: Bomba Sóleo & Glucosa',
+                modal_z3_desc: 'Soleus push-ups, Pogo hops',
+                modal_train_link: 'Entrenar →',
+                modal_streak_label: 'RACHA ACTIVA (MÍN. 3/DÍA):',
+                btn_copy_passport: 'Copiar Pasaporte',
+                btn_close: 'Cerrar',
+                article_cta_prompt: '¿Listo para aplicar la ciencia en 60 segundos?',
+                article_cta_btn: 'Probar este Exnack ahora',
+                complete_heading: '¡Batería Recargada!',
+                btn_copy_card: 'Copiar Logro',
+                btn_next_snack: 'Siguiente →'
+            },
+            en: {
+                nav_subtitle: 'ZERO-SWEAT MICRO-WORKOUTS',
+                nav_deck: 'Trainer',
+                nav_catalog: 'Catalog (8)',
+                nav_calc: 'Calculator',
+                nav_science: 'Science',
+                z1_short: 'Z1: Posture',
+                z2_short: 'Z2: Motor',
+                z3_short: 'Z3: Soleus',
+                filter_all: 'All (8)',
+                filter_stealth: 'Office Stealth',
+                filter_vilpa: 'VILPA / Power',
+                cadence_label: 'CADENCE',
+                reps_est: 'TARGET (60s)',
+                roi_label: 'BIO IMPACT',
+                how_to_label: '⚡ EXECUTION PROTOCOL',
+                btn_start: 'START EXNACK (60s)',
+                btn_pause: 'PAUSE',
+                btn_resume: 'RESUME',
+                btn_lucky: 'Shuffle',
+                scroll_science: 'Explore full catalog & calculator',
+                kbd_play: 'Start/Pause',
+                kbd_nav: 'Prev/Next',
+                kbd_random: 'Shuffle',
+                catalog_badge: 'BIOMECHANICAL ARSENAL • 8 MICRO-BOUTS',
+                catalog_heading: 'Explore by Anatomical Zone',
+                catalog_subheading: 'Click any exercise to load it into the interactive timer. Complete 3 per zone to fill your daily 9/9 battery.',
+                calc_tag: 'SEDENTARY DEACTIVATION CALCULATOR',
+                calc_title: 'How many hours do you sit per day?',
+                calc_desc: 'After 90 continuous minutes without muscular contraction, lipoprotein lipase (LPL) drops up to 90% and insulin sensitivity plummets. An evening gym session does not undo 9 hours of cellular stasis.',
+                calc_load_label: 'ENZYMATIC INACTIVITY LOAD:',
+                hours_sitting: 'HOURS SEATED TODAY:',
+                calc_prescription: 'Minimum effective dose:',
+                calc_frequency: 'Optimal frequency:',
+                calc_time: 'Total daily investment:',
+                calc_risk: 'CV Mortality Reduction (VILPA):',
+                calc_cta: '⚡ Launch 1st Recommended Exnack Now',
+                blog_badge: 'PEER-REVIEWED SCIENCE • ZERO FLUFF',
+                blog_heading: 'Why 60 Seconds Rewires Your Physiology',
+                blog_subheading: '2-minute reads backed by metabolic physiology and longevity telemetry.',
+                waitlist_badge: 'COMING TO iOS, APPLE WATCH & SLACK',
+                waitlist_title: 'Let your accelerometer count every rep.',
+                waitlist_desc: 'We are building the native Exnacks app featuring the Lock Screen "Metabolic Battery" widget and automatic stair & soleus detection.',
+                waitlist_btn: 'Join Beta Waitlist',
+                profile_personal: 'Personal (Watch/iPhone)',
+                profile_corporate: 'Team / Corporate (Slack)',
+                read_article: 'Read Science (2 min) →',
+                modal_battery_tag: 'METABOLIC BATTERY 9/9',
+                modal_battery_title: 'Your Body Status Today',
+                modal_battery_sub: 'Goal: 3 daily snacks per anatomical zone',
+                modal_z1_name: 'Zone 1: Posture & CNS',
+                modal_z1_desc: 'Decompression, Cervical, Balance',
+                modal_z2_name: 'Zone 2: Core & Motor Muscle',
+                modal_z2_desc: 'Quads, Tempo Squats, Stairs',
+                modal_z3_name: 'Zone 3: Soleus & Glucose Pump',
+                modal_z3_desc: 'Soleus push-ups, Silent Pogos',
+                modal_train_link: 'Train →',
+                modal_streak_label: 'ACTIVE STREAK (MIN 3/DAY):',
+                btn_copy_passport: 'Copy Passport',
+                btn_close: 'Close',
+                article_cta_prompt: 'Ready to apply the science in 60 seconds?',
+                article_cta_btn: 'Try this Exnack now',
+                complete_heading: 'Battery Recharged!',
+                btn_copy_card: 'Copy Achievement',
+                btn_next_snack: 'Next Exnack →'
+            }
+        };
+
+        // Zero-Latency Web Audio Synthesizer
+        let audioCtx = null;
+
+        function ensureAudioEngine() {
+            if (!soundEnabled) return false;
+            try {
+                const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+                if (!AudioContextClass) return false;
+                if (!audioCtx) audioCtx = new AudioContextClass();
+                if (audioCtx.state === 'suspended') audioCtx.resume();
+                return true;
+            } catch (e) {
+                return false;
+            }
+        }
+
+        function playToneNote(freq, durationSec, delaySec = 0, type = 'triangle', peakGain = 0.22) {
+            if (!ensureAudioEngine() || !audioCtx) return;
+            try {
+                const startTime = audioCtx.currentTime + delaySec;
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+
+                osc.type = type;
+                osc.frequency.setValueAtTime(freq, startTime);
+
+                gain.gain.setValueAtTime(0.0001, startTime);
+                gain.gain.linearRampToValueAtTime(peakGain, startTime + 0.006);
+                gain.gain.exponentialRampToValueAtTime(0.0001, startTime + durationSec);
+
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+
+                osc.start(startTime);
+                osc.stop(startTime + durationSec + 0.01);
+            } catch (e) {}
+        }
+
+        function playCueSound(cueType) {
+            if (!ensureAudioEngine()) return;
+            switch (cueType) {
+                case 'prep':
+                    playToneNote(659.25, 0.08, 0, 'sine', 0.18);
+                    break;
+                case 'go_work':
+                    playToneNote(587.33, 0.07, 0, 'triangle', 0.20);
+                    playToneNote(880.00, 0.14, 0.06, 'triangle', 0.25);
+                    break;
+                case 'go_rest':
+                    playToneNote(880.00, 0.07, 0, 'triangle', 0.20);
+                    playToneNote(587.33, 0.14, 0.06, 'triangle', 0.22);
+                    break;
+                case 'work':
+                    playToneNote(880.00, 0.12, 0, 'triangle', 0.24);
+                    break;
+                case 'hold':
+                    playToneNote(739.99, 0.12, 0, 'sine', 0.20);
+                    break;
+                case 'rest':
+                    playToneNote(440.00, 0.14, 0, 'sine', 0.20);
+                    break;
+                case 'switch':
+                    playToneNote(1046.50, 0.10, 0, 'triangle', 0.24);
+                    playToneNote(1318.51, 0.16, 0.08, 'triangle', 0.26);
+                    break;
+                case 'subtick':
+                    playToneNote(260.00, 0.04, 0, 'sine', 0.09);
+                    break;
+                case 'complete':
+                    playToneNote(659.25, 0.10, 0.00, 'triangle', 0.22);
+                    playToneNote(830.61, 0.10, 0.08, 'triangle', 0.22);
+                    playToneNote(987.77, 0.12, 0.16, 'triangle', 0.22);
+                    playToneNote(1318.51, 0.30, 0.24, 'triangle', 0.28);
+                    break;
+                case 'shuffle':
+                    playToneNote(783.99, 0.05, 0, 'sine', 0.12);
+                    break;
+            }
+        }
+
+        function getFilteredSnacks() {
+            if (currentFilter === 'all') return EXNACKS_DB;
+            if (currentFilter === 'stealth') return EXNACKS_DB.filter(item => item.category === 'stealth');
+            if (currentFilter === 'vilpa') return EXNACKS_DB.filter(item => item.category === 'vilpa');
+            if (currentFilter === 'zone-1') return EXNACKS_DB.filter(item => item.zone === 1);
+            if (currentFilter === 'zone-2') return EXNACKS_DB.filter(item => item.zone === 2);
+            if (currentFilter === 'zone-3') return EXNACKS_DB.filter(item => item.zone === 3);
+            return EXNACKS_DB;
+        }
+
+        function navigateSnack(direction) {
+            if (isRunning || isPaused) stopTimer();
+            const list = getFilteredSnacks();
+            if (list.length === 0) return;
+
+            const currentId = EXNACKS_DB[currentSnackIndex].id;
+            let pos = list.findIndex(s => s.id === currentId);
+            if (pos === -1) pos = 0;
+
+            const nextPos = (pos + direction + list.length) % list.length;
+            const targetId = list[nextPos].id;
+            currentSnackIndex = EXNACKS_DB.findIndex(s => s.id === targetId);
+            playCueSound('shuffle');
+            renderCurrentSnack(true);
+        }
+
+        function selectSnackById(snackId, scrollToTop = false) {
+            if (isRunning || isPaused) stopTimer();
+            const idx = EXNACKS_DB.findIndex(s => s.id === snackId);
+            if (idx !== -1) {
+                currentSnackIndex = idx;
+                playCueSound('shuffle');
+                renderCurrentSnack(true);
+                if (scrollToTop) {
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
+            }
+        }
+
+        function renderSnackSelectorStrip() {
+            const strip = document.getElementById('snack-selector-strip');
+            if (!strip) return;
+            const list = getFilteredSnacks();
+            const currentId = EXNACKS_DB[currentSnackIndex]?.id;
+            const completedIds = getTodayCounts().completedIds || [];
+
+            strip.innerHTML = list.map(s => {
+                const isSelected = s.id === currentId;
+                const isDone = completedIds.includes(s.id);
+                const zoneDotColor = s.zone === 1 ? 'bg-neon' : s.zone === 2 ? 'bg-stealth' : 'bg-solar';
+                const activeClasses = isSelected
+                    ? 'bg-zinc-800 text-white border-white/30 shadow-sm'
+                    : 'bg-zinc-900/60 text-zinc-400 border-white/5 hover:bg-zinc-900 hover:text-zinc-200';
+
+                return `
+                    <button onclick="selectSnackById('${s.id}')" class="px-2.5 py-1 rounded-lg border text-[11px] font-mono font-bold transition flex items-center gap-1.5 shrink-0 ${activeClasses}">
+                        <span class="w-1.5 h-1.5 rounded-full ${zoneDotColor}"></span>
+                        <span>${s.id.replace('EX-', '#')}</span>
+                        <span class="font-sans font-semibold text-xs truncate max-w-[115px] sm:max-w-[140px]">${s.title[currentLang].split(' ')[0]} ${s.title[currentLang].split(' ')[1] || ''}</span>
+                        ${isDone ? '<span class="text-neon text-[10px]">✓</span>' : ''}
+                    </button>
+                `;
+            }).join('');
+        }
+
+        function renderPhaseTimeline(activePhaseIndex = -1, progressRatio = 0) {
+            const container = document.getElementById('phase-timeline');
+            const snack = EXNACKS_DB[currentSnackIndex];
+            if (!container || !snack) return;
+
+            const phases = snack.phases;
+            container.style.gridTemplateColumns = phases.map(p => `${Math.max(p.duration, 1)}fr`).join(' ');
+
+            container.innerHTML = phases.map((p, idx) => {
+                const isActive = idx === activePhaseIndex;
+                const isPast = activePhaseIndex > idx;
+                let fillBg = 'bg-neon';
+                let textActive = 'text-neon border-neon/40 bg-neon/10';
+                if (p.type === 'hold') {
+                    fillBg = 'bg-solar';
+                    textActive = 'text-solar border-solar/40 bg-solar/10';
+                } else if (p.type === 'rest') {
+                    fillBg = 'bg-stealth';
+                    textActive = 'text-stealth border-stealth/40 bg-stealth/10';
+                }
+
+                const baseBox = isActive
+                    ? `${textActive} font-extrabold`
+                    : 'bg-zinc-900/80 text-zinc-400 border-white/5 font-semibold';
+
+                const widthPct = isActive ? Math.min(100, Math.round(progressRatio * 100)) : isPast ? 100 : 0;
+
+                return `
+                    <div class="relative overflow-hidden rounded-xl border px-2.5 py-1.5 text-center transition-colors ${baseBox}">
+                        <div class="bottom-0 left-0 h-0.5 ${fillBg} transition-all duration-300" style="position: absolute; width: ${widthPct}%"></div>
+                        <div class="font-mono text-[10px] uppercase tracking-wider truncate">${p.label ? p.label[currentLang] : `${p.duration}s`}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function renderCatalogGrid() {
+            const grid = document.getElementById('catalog-grid');
+            if (!grid) return;
+            const currentId = EXNACKS_DB[currentSnackIndex]?.id;
+            const completedIds = getTodayCounts().completedIds || [];
+
+            grid.innerHTML = EXNACKS_DB.map(s => {
+                const isSelected = s.id === currentId;
+                const isDone = completedIds.includes(s.id);
+                const zoneBadgeClass = s.zone === 1
+                    ? 'text-neon bg-neon/10 border-neon/30'
+                    : s.zone === 2
+                        ? 'text-stealth bg-stealth/10 border-stealth/30'
+                        : 'text-solar bg-solar/10 border-solar/30';
+
+                return `
+                    <div onclick="selectSnackById('${s.id}', true)" class="glass-panel rounded-2xl p-4 cursor-pointer transition-all hover:-translate-y-0.5 flex flex-col justify-between border ${isSelected ? 'border-neon/60 ring-1 ring-neon/30' : 'border-white/10 hover:border-white/25'}">
+                        <div>
+                            <div class="flex items-center justify-between gap-1 mb-2">
+                                <span class="px-2 py-0.5 rounded text-[10px] font-mono font-bold border ${zoneBadgeClass}">
+                                    Z${s.zone} • ${s.id}
+                                </span>
+                                ${isDone
+                                    ? `<span class="text-[10px] font-mono font-bold text-neon bg-neon/10 px-2 py-0.5 rounded border border-neon/30">✓ HOY</span>`
+                                    : `<span class="text-[10px] font-mono text-zinc-500">${s.repsGoal}</span>`
+                                }
+                            </div>
+                            <h3 class="text-sm font-extrabold text-white leading-snug mb-1">${s.title[currentLang]}</h3>
+                            <p class="text-xs text-zinc-400 line-clamp-2 leading-relaxed mb-3">${s.subtitle[currentLang]}</p>
+                        </div>
+                        <div class="pt-2.5 border-t border-white/[0.06] flex items-center justify-between text-[11px] font-mono">
+                            <span class="text-zinc-300">${s.roiShort[currentLang]}</span>
+                            <span class="text-neon font-bold">${isSelected ? (currentLang === 'es' ? 'ACTIVO ↑' : 'ACTIVE ↑') : (currentLang === 'es' ? 'Cargar →' : 'Load →')}</span>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function triggerLuckySnack() {
+            if (isRunning || isPaused) stopTimer();
+            const dice = document.getElementById('dice-icon');
+            if (dice) {
+                dice.style.transform = 'rotate(360deg)';
+                setTimeout(() => { dice.style.transform = 'rotate(0deg)'; }, 300);
+            }
+
+            const counts = getTodayCounts();
+            let pool = EXNACKS_DB;
+            
+            if (counts.z1 < 3 || counts.z2 < 3 || counts.z3 < 3) {
+                let lowestZone = 1;
+                let minVal = counts.z1;
+                if (counts.z2 < minVal) { minVal = counts.z2; lowestZone = 2; }
+                if (counts.z3 < minVal) { minVal = counts.z3; lowestZone = 3; }
+                
+                const zonePool = EXNACKS_DB.filter(s => s.zone === lowestZone);
+                if (zonePool.length > 0) pool = zonePool;
+            }
+
+            if (pool.length > 1) {
+                let nextIndex = currentSnackIndex;
+                let attempts = 0;
+                while (attempts < 8) {
+                    const randItem = pool[Math.floor(Math.random() * pool.length)];
+                    const idx = EXNACKS_DB.findIndex(s => s.id === randItem.id);
+                    if (idx !== currentSnackIndex) {
+                        nextIndex = idx;
+                        break;
+                    }
+                    attempts++;
+                }
+                currentSnackIndex = nextIndex;
+            }
+
+            playCueSound('shuffle');
+            renderCurrentSnack(true);
+        }
+
+        function resetVisualCueIdle() {
+            const snack = EXNACKS_DB[currentSnackIndex];
+            const pill = document.getElementById('phase-pill');
+            const dot = document.getElementById('phase-dot');
+            const text = document.getElementById('phase-text');
+            const subtimer = document.getElementById('phase-subtimer');
+            const diagram = document.getElementById('visual-diagram');
+            const ringContainer = document.getElementById('ring-container');
+            const phaseRing = document.getElementById('phase-ring');
+            const timerRing = document.getElementById('timer-ring');
+            const repsLabel = document.getElementById('reps-label');
+            const liveReps = document.getElementById('live-reps');
+
+            pill.className = 'px-4 py-1.5 rounded-full text-xs font-mono font-extrabold uppercase tracking-wider bg-zinc-900/95 text-zinc-300 border border-white/10 transition-all duration-200 flex items-center gap-2';
+            dot.className = 'w-2 h-2 rounded-full bg-neon animate-pulse';
+            text.textContent = currentLang === 'es' ? 'LISTO • AUDIO + GUÍA VISUAL' : 'READY • AUDIO + VISUAL CUES';
+            subtimer.textContent = snack ? snack.cadence : '60S';
+            subtimer.className = 'font-mono text-[10px] font-bold text-zinc-400 uppercase tracking-widest mt-1 h-3.5 tabular-nums';
+
+            diagram.style.transitionDuration = '300ms';
+            diagram.style.transform = 'scale(1)';
+            diagram.className = 'w-11 h-11 sm:w-13 sm:h-13 flex items-center justify-center text-neon animate-float';
+            ringContainer.className = 'relative w-44 h-44 sm:w-52 sm:h-52 flex items-center justify-center rounded-full transition-all duration-300';
+
+            phaseRing.style.transition = 'none';
+            timerRing.style.transition = 'none';
+            phaseRing.style.strokeDashoffset = INNER_CIRCUMFERENCE;
+            timerRing.style.strokeDashoffset = 0;
+            timerRing.setAttribute('class', 'progress-ring__circle text-neon');
+
+            repsLabel.textContent = I18N[currentLang].reps_est;
+            if (snack) liveReps.textContent = snack.repsGoal;
+            renderPhaseTimeline(-1, 0);
+        }
+
+        function renderCurrentSnack(animateCard = false) {
+            if (currentSnackIndex >= EXNACKS_DB.length) currentSnackIndex = 0;
+            const snack = EXNACKS_DB[currentSnackIndex];
+
+            const card = document.getElementById('exnack-card');
+            if (animateCard) {
+                card.classList.add('scale-[0.99]', 'opacity-90');
+                setTimeout(() => card.classList.remove('scale-[0.99]', 'opacity-90'), 160);
+            }
+
+            // Dynamic Zone Badge Styling
+            const zoneBadge = document.getElementById('zone-badge');
+            zoneBadge.textContent = snack.zoneName[currentLang];
+            if (snack.zone === 1) {
+                zoneBadge.className = 'px-2.5 py-1 rounded-lg text-[10px] font-mono font-bold uppercase tracking-wider bg-neon/15 text-neon border border-neon/30';
+            } else if (snack.zone === 2) {
+                zoneBadge.className = 'px-2.5 py-1 rounded-lg text-[10px] font-mono font-bold uppercase tracking-wider bg-stealth/15 text-stealth border border-stealth/30';
+            } else {
+                zoneBadge.className = 'px-2.5 py-1 rounded-lg text-[10px] font-mono font-bold uppercase tracking-wider bg-solar/15 text-solar border border-solar/30';
+            }
+
+            document.getElementById('snack-badge-stealth').textContent = snack.stealthLevel[currentLang];
+            document.getElementById('snack-badge-Sweat').textContent = snack.sweatLevel[currentLang];
+            document.getElementById('snack-id-tag').textContent = `#${snack.id}`;
+            document.getElementById('snack-title').textContent = snack.title[currentLang];
+            document.getElementById('snack-subtitle').textContent = snack.subtitle[currentLang];
+            document.getElementById('snack-cadence').textContent = snack.cadence;
+            document.getElementById('live-reps').textContent = snack.repsGoal;
+            document.getElementById('snack-roi-short').textContent = snack.roiShort[currentLang];
+            document.getElementById('snack-location').textContent = snack.location[currentLang];
+            document.getElementById('snack-instructions').textContent = snack.instructions[currentLang];
+            document.getElementById('snack-science').innerHTML = `<strong class="text-neon">${currentLang === 'es' ? 'Evidencia:' : 'Science:'}</strong> ${snack.science[currentLang]}`;
+            document.getElementById('visual-diagram').innerHTML = snack.svg;
+
+            resetVisualCueIdle();
+            renderSnackSelectorStrip();
+            renderCatalogGrid();
+
+            const ambient = document.getElementById('card-ambient');
+            if (snack.zone === 1) {
+                ambient.className = 'w-64 h-64 rounded-full bg-neon/15 blur-3xl pointer-events-none transition-all duration-500';
+            } else if (snack.zone === 2) {
+                ambient.className = 'w-64 h-64 rounded-full bg-stealth/15 blur-3xl pointer-events-none transition-all duration-500';
+            } else {
+                ambient.className = 'w-64 h-64 rounded-full bg-solar/15 blur-3xl pointer-events-none transition-all duration-500';
+            }
+        }
+
+        function setCategoryFilter(filter) {
+            if (isRunning || isPaused) stopTimer();
+            currentFilter = filter;
+            
+            ['all', 'stealth', 'vilpa'].forEach(f => {
+                const btn = document.getElementById(`filter-${f}`);
+                if (btn) {
+                    if (f === filter) {
+                        btn.className = 'filter-pill whitespace-nowrap px-3 py-1.5 rounded-xl text-xs font-bold transition bg-white text-black shadow-sm';
+                    } else {
+                        btn.className = 'filter-pill whitespace-nowrap px-3 py-1.5 rounded-xl text-xs font-bold transition bg-zinc-900/90 text-zinc-300 border border-white/10 hover:border-white/25';
+                    }
+                }
+            });
+
+            [1, 2, 3].forEach(z => {
+                const zp = document.getElementById(`zone-pill-${z}`);
+                if (zp) {
+                    const isZoneActive = filter === `zone-${z}`;
+                    zp.className = `zone-top-pill flex items-center justify-between px-2.5 py-1.5 rounded-xl transition text-left ${isZoneActive ? 'bg-zinc-800 border border-white/30' : 'bg-zinc-900/90 hover:bg-zinc-800/80 border border-white/5'}`;
+                }
+            });
+
+            const list = getFilteredSnacks();
+            if (list.length > 0) {
+                const targetId = list[0].id;
+                currentSnackIndex = EXNACKS_DB.findIndex(s => s.id === targetId);
+            }
+            renderCurrentSnack(true);
+        }
+
+        function filterByZone(zoneNum) {
+            closeBodyModal();
+            setCategoryFilter(`zone-${zoneNum}`);
+        }
+
+        function toggleTimer() {
+            if (!isRunning && !isPaused) {
+                startTimer();
+            } else if (isRunning) {
+                pauseTimer();
+            } else if (isPaused) {
+                resumeTimer();
+            }
+        }
+
+        function getPhaseStateAtSecond(snack, sec) {
+            const phases = snack.phases;
+            const cycleDuration = phases.reduce((acc, p) => acc + p.duration, 0);
+            const cycleIndex = Math.floor(sec / cycleDuration);
+            const secInCycle = sec % cycleDuration;
+
+            let acc = 0;
+            for (let i = 0; i < phases.length; i++) {
+                const p = phases[i];
+                if (secInCycle < acc + p.duration) {
+                    const secInPhase = secInCycle - acc;
+                    const remainingInPhase = p.duration - secInPhase;
+                    return {
+                        phase: p,
+                        phaseIndex: i,
+                        isPhaseStart: secInPhase === 0,
+                        secInPhase,
+                        remainingInPhase,
+                        cycleIndex,
+                        cycleDuration
+                    };
+                }
+                acc += p.duration;
+            }
+            return {
+                phase: phases[0],
+                phaseIndex: 0,
+                isPhaseStart: true,
+                secInPhase: 0,
+                remainingInPhase: phases[0].duration,
+                cycleIndex,
+                cycleDuration
+            };
+        }
+
+        function applySynchronizedStep(snack, sec) {
+            const state = getPhaseStateAtSecond(snack, sec);
+            const { phase, phaseIndex, isPhaseStart, secInPhase, remainingInPhase, cycleIndex } = state;
+
+            const pill = document.getElementById('phase-pill');
+            const dot = document.getElementById('phase-dot');
+            const text = document.getElementById('phase-text');
+            const subtimer = document.getElementById('phase-subtimer');
+            const diagram = document.getElementById('visual-diagram');
+            const ringContainer = document.getElementById('ring-container');
+            const timerRing = document.getElementById('timer-ring');
+            const phaseRing = document.getElementById('phase-ring');
+            const repsLabel = document.getElementById('reps-label');
+            const liveReps = document.getElementById('live-reps');
+            const repsBox = document.getElementById('reps-box');
+
+            text.textContent = phase.cue[currentLang];
+            if (phase.duration > 1) {
+                subtimer.textContent = `${currentLang === 'es' ? 'FASE' : 'PHASE'}: ${remainingInPhase}s`;
+            } else {
+                subtimer.textContent = `${currentLang === 'es' ? 'RITMO' : 'TEMPO'}: 1s`;
+            }
+
+            if (phase.type === 'work' || phase.type === 'switch') {
+                pill.className = 'px-4 py-1.5 rounded-full text-xs font-mono font-extrabold uppercase tracking-wider bg-neon text-black border border-neon transition-all duration-150 flex items-center gap-2 shadow-lg scale-[1.02]';
+                dot.className = 'w-2 h-2 rounded-full bg-black animate-ping';
+                timerRing.setAttribute('class', 'progress-ring__circle text-neon');
+                phaseRing.setAttribute('class', 'progress-ring__circle text-neon');
+                diagram.className = 'w-11 h-11 sm:w-13 sm:h-13 flex items-center justify-center text-neon transition-transform ease-out';
+                ringContainer.className = 'relative w-44 h-44 sm:w-52 sm:h-52 flex items-center justify-center rounded-full transition-all duration-300 ring-neon-glow';
+                subtimer.className = 'font-mono text-[10px] font-extrabold text-neon uppercase tracking-widest mt-1 h-3.5 tabular-nums';
+            } else if (phase.type === 'hold') {
+                pill.className = 'px-4 py-1.5 rounded-full text-xs font-mono font-extrabold uppercase tracking-wider bg-solar text-black border border-solar transition-all duration-150 flex items-center gap-2 shadow-lg';
+                dot.className = 'w-2 h-2 rounded-full bg-black';
+                timerRing.setAttribute('class', 'progress-ring__circle text-solar');
+                phaseRing.setAttribute('class', 'progress-ring__circle text-solar');
+                diagram.className = 'w-11 h-11 sm:w-13 sm:h-13 flex items-center justify-center text-solar transition-transform ease-out';
+                ringContainer.className = 'relative w-44 h-44 sm:w-52 sm:h-52 flex items-center justify-center rounded-full transition-all duration-300 ring-amber-glow';
+                subtimer.className = 'font-mono text-[10px] font-extrabold text-solar uppercase tracking-widest mt-1 h-3.5 tabular-nums';
+            } else {
+                pill.className = 'px-4 py-1.5 rounded-full text-xs font-mono font-extrabold uppercase tracking-wider bg-stealth/20 text-stealth border border-stealth/50 transition-all duration-150 flex items-center gap-2';
+                dot.className = 'w-2 h-2 rounded-full bg-stealth';
+                timerRing.setAttribute('class', 'progress-ring__circle text-stealth');
+                phaseRing.setAttribute('class', 'progress-ring__circle text-stealth');
+                diagram.className = 'w-11 h-11 sm:w-13 sm:h-13 flex items-center justify-center text-stealth transition-transform ease-out';
+                ringContainer.className = 'relative w-44 h-44 sm:w-52 sm:h-52 flex items-center justify-center rounded-full transition-all duration-300 ring-stealth-glow';
+                subtimer.className = 'font-mono text-[10px] font-extrabold text-stealth uppercase tracking-widest mt-1 h-3.5 tabular-nums';
+            }
+
+            if (isPhaseStart) {
+                diagram.style.transitionDuration = `${Math.min(phase.duration * 800, 1600)}ms`;
+                diagram.style.transform = `scale(${phase.scale || 1})`;
+            }
+
+            phaseRing.style.transition = 'stroke-dashoffset 0.95s linear';
+            const progressRatio = (secInPhase + 1) / phase.duration;
+            phaseRing.style.strokeDashoffset = INNER_CIRCUMFERENCE - progressRatio * INNER_CIRCUMFERENCE;
+
+            renderPhaseTimeline(phaseIndex, progressRatio);
+
+            const currentRepNumber = Math.min(cycleIndex + 1, snack.targetCycles);
+            completedCycles = currentRepNumber;
+            repsLabel.textContent = currentLang === 'es' ? 'EN VIVO' : 'LIVE COUNT';
+            liveReps.textContent = `${currentRepNumber} / ${snack.targetCycles} ${snack.unitLabel[currentLang]}`;
+
+            if (isPhaseStart) {
+                repsBox.classList.add('border-neon/60', 'bg-neon/10');
+                setTimeout(() => repsBox.classList.remove('border-neon/60', 'bg-neon/10'), 250);
+                playCueSound(phase.type);
+            } else {
+                playCueSound('subtick');
+            }
+        }
+
+        function runTimerTick() {
+            const snack = EXNACKS_DB[currentSnackIndex];
+            const text = document.getElementById('phase-text');
+            const subtimer = document.getElementById('phase-subtimer');
+            const ring = document.getElementById('timer-ring');
+
+            if (isPrepPhase) {
+                prepTimeLeft--;
+                if (prepTimeLeft > 0) {
+                    text.textContent = currentLang === 'es' ? `PREPÁRATE EN ${prepTimeLeft}...` : `GET READY IN ${prepTimeLeft}...`;
+                    document.getElementById('timer-display').textContent = `00:0${prepTimeLeft}`;
+                    playCueSound('prep');
+                    return;
+                } else {
+                    isPrepPhase = false;
+                    document.getElementById('timer-display').textContent = '01:00';
+                    void ring.offsetWidth;
+                    ring.style.transition = 'stroke-dashoffset 1s linear';
+                    ring.style.strokeDashoffset = OUTER_CIRCUMFERENCE * (1 / 60);
+                    playCueSound(snack.phases[0].type === 'rest' ? 'go_rest' : 'go_work');
+                    applySynchronizedStep(snack, 0);
+                    return;
+                }
+            }
+
+            timeLeft--;
+            elapsedSeconds++;
+
+            if (timeLeft <= 0) {
+                clearInterval(timerInterval);
+                document.getElementById('timer-display').textContent = '00:00';
+                text.textContent = currentLang === 'es' ? '✓ ¡EXNACK COMPLETADO!' : '✓ EXNACK COMPLETE!';
+                subtimer.textContent = '60 / 60s';
+                playCueSound('complete');
+                setTimeout(() => {
+                    if (isRunning) completeSnack();
+                }, 420);
+                return;
+            }
+
+            const mins = String(Math.floor(timeLeft / 60)).padStart(2, '0');
+            const secs = String(timeLeft % 60).padStart(2, '0');
+            document.getElementById('timer-display').textContent = `${mins}:${secs}`;
+
+            const nextOffset = OUTER_CIRCUMFERENCE * ((60 - timeLeft + 1) / 60);
+            ring.style.transition = 'stroke-dashoffset 1s linear';
+            ring.style.strokeDashoffset = nextOffset;
+
+            applySynchronizedStep(snack, elapsedSeconds);
+        }
+
+        function startTimer() {
+            ensureAudioEngine();
+            isRunning = true;
+            isPaused = false;
+            isPrepPhase = true;
+            prepTimeLeft = 3;
+            timeLeft = 60;
+            elapsedSeconds = 0;
+            completedCycles = 0;
+
+            const startBtn = document.getElementById('start-btn');
+            const startText = document.getElementById('start-btn-text');
+            const startIcon = document.getElementById('start-btn-icon');
+            const resetBtn = document.getElementById('reset-btn');
+            const diagram = document.getElementById('visual-diagram');
+            const pill = document.getElementById('phase-pill');
+            const dot = document.getElementById('phase-dot');
+            const text = document.getElementById('phase-text');
+            const subtimer = document.getElementById('phase-subtimer');
+            const ring = document.getElementById('timer-ring');
+            const phaseRing = document.getElementById('phase-ring');
+
+            startBtn.classList.remove('bg-neon', 'text-black', 'neon-glow');
+            startBtn.classList.add('bg-amber-400', 'text-black');
+            startIcon.textContent = '⏸';
+            startText.textContent = I18N[currentLang].btn_pause;
+            resetBtn.classList.remove('hidden');
+            resetBtn.classList.add('flex');
+            diagram.classList.remove('animate-float');
+
+            ring.style.transition = 'none';
+            ring.style.strokeDashoffset = 0;
+            phaseRing.style.transition = 'none';
+            phaseRing.style.strokeDashoffset = INNER_CIRCUMFERENCE;
+
+            pill.className = 'px-4 py-1.5 rounded-full text-xs font-mono font-extrabold uppercase tracking-wider bg-solar/20 text-solar border border-solar/50 transition-all duration-150 flex items-center gap-2';
+            dot.className = 'w-2 h-2 rounded-full bg-solar animate-ping';
+            text.textContent = currentLang === 'es' ? `PREPÁRATE EN ${prepTimeLeft}...` : `GET READY IN ${prepTimeLeft}...`;
+            document.getElementById('timer-display').textContent = `00:0${prepTimeLeft}`;
+            subtimer.textContent = currentLang === 'es' ? 'TOMA POSICIÓN' : 'GET IN POSITION';
+            playCueSound('prep');
+
+            clearInterval(timerInterval);
+            timerInterval = setInterval(runTimerTick, 1000);
+        }
+
+        function pauseTimer() {
+            if (!isRunning) return;
+            isRunning = false;
+            isPaused = true;
+            clearInterval(timerInterval);
+
+            const startBtn = document.getElementById('start-btn');
+            const startText = document.getElementById('start-btn-text');
+            const startIcon = document.getElementById('start-btn-icon');
+            const text = document.getElementById('phase-text');
+
+            startBtn.classList.remove('bg-amber-400');
+            startBtn.classList.add('bg-neon', 'neon-glow');
+            startIcon.textContent = '▶';
+            startText.textContent = I18N[currentLang].btn_resume;
+            text.textContent = currentLang === 'es' ? '⏸ EN PAUSA (PULSA REANUDAR)' : '⏸ PAUSED (PRESS RESUME)';
+        }
+
+        function resumeTimer() {
+            if (!isPaused) return;
+            ensureAudioEngine();
+            isPaused = false;
+            isRunning = true;
+
+            const startBtn = document.getElementById('start-btn');
+            const startText = document.getElementById('start-btn-text');
+            const startIcon = document.getElementById('start-btn-icon');
+
+            startBtn.classList.remove('bg-neon', 'neon-glow');
+            startBtn.classList.add('bg-amber-400');
+            startIcon.textContent = '⏸';
+            startText.textContent = I18N[currentLang].btn_pause;
+
+            if (!isPrepPhase) {
+                applySynchronizedStep(EXNACKS_DB[currentSnackIndex], elapsedSeconds);
+            }
+            clearInterval(timerInterval);
+            timerInterval = setInterval(runTimerTick, 1000);
+        }
+
+        function stopTimer() {
+            isRunning = false;
+            isPaused = false;
+            isPrepPhase = false;
+            clearInterval(timerInterval);
+            timeLeft = 60;
+            elapsedSeconds = 0;
+            document.getElementById('timer-display').textContent = '01:00';
+
+            const startBtn = document.getElementById('start-btn');
+            const startText = document.getElementById('start-btn-text');
+            const startIcon = document.getElementById('start-btn-icon');
+            const resetBtn = document.getElementById('reset-btn');
+
+            startBtn.classList.remove('bg-red-500', 'bg-amber-400', 'text-white');
+            startBtn.classList.add('bg-neon', 'text-black', 'neon-glow');
+            startIcon.textContent = '▶';
+            startText.textContent = I18N[currentLang].btn_start;
+            resetBtn.classList.add('hidden');
+            resetBtn.classList.remove('flex');
+
+            resetVisualCueIdle();
+        }
+
+        function completeSnack() {
+            const snack = EXNACKS_DB[currentSnackIndex];
+            stopTimer();
+
+            const store = loadStorageState();
+            const todayKey = getTodayKey();
+            if (snack.zone === 1) store[todayKey].z1 = Math.min(3, store[todayKey].z1 + 1);
+            if (snack.zone === 2) store[todayKey].z2 = Math.min(3, store[todayKey].z2 + 1);
+            if (snack.zone === 3) store[todayKey].z3 = Math.min(3, store[todayKey].z3 + 1);
+            if (!store[todayKey].completedIds.includes(snack.id)) {
+                store[todayKey].completedIds.push(snack.id);
+            }
+            saveStorageState(store);
+
+            const counts = getTodayCounts();
+            const totalToday = counts.z1 + counts.z2 + counts.z3;
+
+            document.getElementById('complete-zone-tag').textContent = snack.zoneName[currentLang];
+            const statsEl = document.getElementById('complete-stats');
+            statsEl.innerHTML = `
+                <div class="text-white font-bold text-sm">${snack.title[currentLang]}</div>
+                <div class="text-neon">⏱ 60s • ${snack.roiShort[currentLang]}</div>
+                <div class="text-stealth pt-1 border-t border-white/10">
+                    ${currentLang === 'es' ? 'Batería hoy' : 'Battery today'}: <strong>${totalToday}/9</strong> (Z1:${counts.z1}/3 • Z2:${counts.z2}/3 • Z3:${counts.z3}/3)
+                </div>
+            `;
+            const modal = document.getElementById('completion-modal');
+            if (modal && typeof modal.showModal === 'function') {
+                modal.showModal();
+            }
+        }
+
+        function closeCompletionModal() {
+            const modal = document.getElementById('completion-modal');
+            if (modal && modal.open) modal.close();
+            triggerLuckySnack();
+        }
+
+        async function copyTextToClipboard(text) {
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                try {
+                    await navigator.clipboard.writeText(text);
+                    return true;
+                } catch (e) {}
+            }
+            const tempInput = document.createElement('textarea');
+            tempInput.value = text;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempInput);
+            return true;
+        }
+
+        async function copyShareStats() {
+            const snack = EXNACKS_DB[currentSnackIndex];
+            const counts = getTodayCounts();
+            const totalToday = counts.z1 + counts.z2 + counts.z3;
+            const shareText = `⚡ EXNACKS.COM — 60s ${snack.title[currentLang]} (${snack.zoneName[currentLang]}). Batería: ${totalToday}/9 snacks | 🔥 Racha: ${calculateStreak()}d.`;
+            await copyTextToClipboard(shareText);
+
+            const btn = document.getElementById('share-btn');
+            const orig = btn.innerHTML;
+            btn.textContent = currentLang === 'es' ? '✓ ¡Copiado!' : '✓ Copied!';
+            setTimeout(() => { btn.innerHTML = orig; }, 2000);
+        }
+
+        function openBodyModal() {
+            const counts = getTodayCounts();
+            document.getElementById('modal-z1-count').textContent = `${counts.z1}/3`;
+            document.getElementById('modal-z2-count').textContent = `${counts.z2}/3`;
+            document.getElementById('modal-z3-count').textContent = `${counts.z3}/3`;
+
+            const streak = calculateStreak();
+            document.getElementById('streak-days-val').textContent = `🔥 ${streak} ${currentLang === 'es' ? 'Días' : 'Days'}`;
+
+            const strip = document.getElementById('weekly-strip');
+            const data = loadStorageState();
+            let html = '';
+            const daysNames = currentLang === 'es' ? ['L', 'M', 'X', 'J', 'V', 'S', 'D'] : ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
+            
+            for (let i = 6; i >= 0; i--) {
+                const d = new Date();
+                d.setDate(d.getDate() - i);
+                const key = d.toISOString().split('T')[0];
+                const dayCounts = data[key] || { z1: 0, z2: 0, z3: 0 };
+                const total = dayCounts.z1 + dayCounts.z2 + dayCounts.z3;
+                const dayLabel = daysNames[(d.getDay() + 6) % 7];
+                const isToday = i === 0;
+
+                let bgClass = 'bg-zinc-900 text-zinc-400 border-white/10';
+                if (total >= 9) bgClass = 'bg-neon text-black font-black border-neon';
+                else if (total >= 3) bgClass = 'bg-stealth/20 text-stealth border-stealth/50 font-bold';
+                else if (isToday) bgClass = 'bg-zinc-800 text-white border-white/30';
+
+                html += `
+                    <div class="flex flex-col items-center justify-center p-2 rounded-xl border ${bgClass}">
+                        <span class="text-[9px] font-mono opacity-75">${dayLabel}</span>
+                        <span class="text-xs font-mono font-bold mt-0.5 tabular-nums">${total}</span>
+                    </div>
+                `;
+            }
+            strip.innerHTML = html;
+
+            const modal = document.getElementById('body-modal');
+            if (modal && typeof modal.showModal === 'function') {
+                modal.showModal();
+            }
+        }
+
+        function closeBodyModal() {
+            const modal = document.getElementById('body-modal');
+            if (modal && modal.open) modal.close();
+        }
+
+        async function copyPassportCard() {
+            const counts = getTodayCounts();
+            const streak = calculateStreak();
+            const text = `EXNACKS.COM — Pasaporte Metabólico 9/9\n🔥 Racha: ${streak}d\n🧠 Postura/SNC (Z1): ${counts.z1}/3\n🔥 Core/Motor (Z2): ${counts.z2}/3\n⚡ Sóleo/Glucosa (Z3): ${counts.z3}/3\nTotal hoy: ${counts.z1 + counts.z2 + counts.z3}/9 snacks.`;
+            await copyTextToClipboard(text);
+
+            const btn = document.getElementById('passport-share-btn');
+            const orig = btn.innerHTML;
+            btn.textContent = currentLang === 'es' ? '✓ ¡Pasaporte Copiado!' : '✓ Passport Copied!';
+            setTimeout(() => { btn.innerHTML = orig; }, 2000);
+        }
+
+        function renderBlog() {
+            const grid = document.getElementById('blog-grid');
+            if (!grid) return;
+            grid.innerHTML = BLOG_ARTICLES.map(art => `
+                <article onclick="openArticleModal('${art.id}')" class="glass-panel rounded-3xl p-6 border border-white/10 hover:border-neon/50 transition cursor-pointer flex flex-col justify-between group">
+                    <div>
+                        <div class="flex items-center justify-between text-[11px] font-mono text-zinc-400 mb-3">
+                            <span class="text-neon font-bold">${art.tag[currentLang]}</span>
+                            <span>${art.readTime}</span>
+                        </div>
+                        <h3 class="text-lg font-extrabold text-white group-hover:text-neon transition leading-snug mb-3">
+                            ${art.title[currentLang]}
+                        </h3>
+                        <p class="text-xs sm:text-sm text-zinc-400 leading-relaxed mb-5">
+                            ${art.excerpt[currentLang]}
+                        </p>
+                    </div>
+                    <div class="pt-3 border-t border-white/10 flex items-center justify-between text-xs font-mono text-white">
+                        <span class="group-hover:text-neon transition">${I18N[currentLang].read_article}</span>
+                        <span class="text-zinc-500">#${art.relatedSnackId}</span>
+                    </div>
+                </article>
+            `).join('');
+        }
+
+        function openArticleModal(articleId) {
+            const art = BLOG_ARTICLES.find(a => a.id === articleId);
+            if (!art) return;
+            modalSnackTargetId = art.relatedSnackId;
+            document.getElementById('modal-tag').textContent = art.tag[currentLang];
+            document.getElementById('modal-title').textContent = art.title[currentLang];
+            document.getElementById('modal-meta').innerHTML = `⏱ ${art.readTime} • EXNACKS RESEARCH LAB • #${art.relatedSnackId}`;
+            document.getElementById('modal-body').innerHTML = art.body[currentLang];
+
+            const modal = document.getElementById('article-modal');
+            if (modal && typeof modal.showModal === 'function') {
+                modal.showModal();
+            }
+        }
+
+        function closeArticleModal() {
+            const modal = document.getElementById('article-modal');
+            if (modal && modal.open) modal.close();
+        }
+
+        function trySnackFromArticle() {
+            closeArticleModal();
+            setCategoryFilter('all');
+            selectSnackById(modalSnackTargetId, true);
+        }
+
+        // Dynamic Sedentary Oxidation Calculator
+        function updateCalculator(hoursRaw) {
+            const hours = parseInt(hoursRaw, 10) || 8;
+            const shutdownCycles = Math.max(2, Math.round(hours / 1.3));
+            const recommendedSnacks = Math.min(12, Math.max(3, hours + 1));
+            const freqMinutes = Math.max(40, Math.round((hours * 60) / recommendedSnacks));
+            const riskPct = Math.min(100, Math.max(18, Math.round(((hours - 2) / 12) * 100)));
+
+            document.getElementById('hours-val').textContent = `${hours} hrs`;
+            document.getElementById('calc-snacks').textContent = `${recommendedSnacks} snacks × 60s`;
+            document.getElementById('calc-freq').textContent = currentLang === 'es'
+                ? `1 cada ~${freqMinutes} min`
+                : `1 every ~${freqMinutes} min`;
+            document.getElementById('calc-minutes').textContent = `${recommendedSnacks} ${currentLang === 'es' ? 'minutos / día' : 'minutes / day'}`;
+
+            const vilpaReduction = hours >= 9 ? '-38% a -42%' : hours >= 6 ? '-32% a -38%' : '-25% a -30%';
+            document.getElementById('calc-vilpa').textContent = vilpaReduction;
+
+            const riskBar = document.getElementById('calc-risk-bar');
+            if (riskBar) riskBar.style.width = `${riskPct}%`;
+
+            const statusEl = document.getElementById('calc-load-status');
+            if (statusEl) {
+                if (hours <= 4) {
+                    statusEl.textContent = currentLang === 'es'
+                        ? `MODERADA (${shutdownCycles} apagones LPL/día)`
+                        : `MODERATE (${shutdownCycles} LPL shutdowns/day)`;
+                    statusEl.className = 'font-bold text-neon';
+                } else if (hours <= 8) {
+                    statusEl.textContent = currentLang === 'es'
+                        ? `ALTA (${shutdownCycles} apagones LPL/día)`
+                        : `HIGH (${shutdownCycles} LPL shutdowns/day)`;
+                    statusEl.className = 'font-bold text-solar';
+                } else {
+                    statusEl.textContent = currentLang === 'es'
+                        ? `CRÍTICA (${shutdownCycles} apagones LPL/día)`
+                        : `CRITICAL (${shutdownCycles} LPL shutdowns/day)`;
+                    statusEl.className = 'font-bold text-red-400';
+                }
+            }
+        }
+
+        function startRecommendedProtocol() {
+            selectSnackById('EX-01', true);
+        }
+
+        function toggleSound() {
+            soundEnabled = !soundEnabled;
+            const btn = document.getElementById('sound-toggle');
+            const iconOn = document.getElementById('sound-on-icon');
+            const iconOff = document.getElementById('sound-off-icon');
+            const label = document.getElementById('sound-label');
+
+            btn.classList.toggle('text-neon', soundEnabled);
+            btn.classList.toggle('text-zinc-500', !soundEnabled);
+            iconOn.classList.toggle('hidden', !soundEnabled);
+            iconOff.classList.toggle('hidden', soundEnabled);
+            if (label) label.textContent = soundEnabled ? 'AUDIO ON' : 'MUTED';
+        }
+
+        function toggleLanguage() {
+            currentLang = currentLang === 'es' ? 'en' : 'es';
+            document.documentElement.lang = currentLang;
+
+            document.getElementById('lang-es').className = currentLang === 'es' ? 'text-neon font-extrabold' : 'text-zinc-500';
+            document.getElementById('lang-en').className = currentLang === 'en' ? 'text-neon font-extrabold' : 'text-zinc-500';
+
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (I18N[currentLang][key]) {
+                    el.textContent = I18N[currentLang][key];
+                }
+            });
+
+            renderCurrentSnack(false);
+            renderBlog();
+            updateCalculator(document.getElementById('sitting-slider').value);
+        }
+
+        function handleWaitlistSubmit(e) {
+            e.preventDefault();
+            const email = document.getElementById('waitlist-email').value;
+            const feedback = document.getElementById('waitlist-feedback');
+            feedback.textContent = currentLang === 'es'
+                ? `✓ ¡Listo! Guardamos tu lugar (${email}) para el beta de Exnacks iOS/Watch.`
+                : `✓ You're on the list (${email}) for the Exnacks iOS/Watch beta!`;
+            feedback.classList.remove('hidden');
+            document.getElementById('waitlist-form').reset();
+        }
+
+        // Intuitive Keyboard Shortcuts
+        window.addEventListener('keydown', (e) => {
+            if (document.activeElement && ['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) return;
+            const anyDialogOpen = document.querySelector('dialog[open]');
+            if (anyDialogOpen) return;
+
+            if (e.code === 'Space') {
+                e.preventDefault();
+                toggleTimer();
+            } else if (e.code === 'ArrowRight') {
+                e.preventDefault();
+                navigateSnack(1);
+            } else if (e.code === 'ArrowLeft') {
+                e.preventDefault();
+                navigateSnack(-1);
+            } else if (e.code === 'KeyR') {
+                e.preventDefault();
+                triggerLuckySnack();
+            }
+        });
+
+        window.addEventListener('DOMContentLoaded', () => {
+            initDialogLightDismiss();
+            updateHeaderStreakAndScore();
+            currentSnackIndex = 0;
+            renderCurrentSnack(false);
+            renderBlog();
+            updateCalculator(document.getElementById('sitting-slider').value);
+        });
+    </script>
+</body>
+</html>
